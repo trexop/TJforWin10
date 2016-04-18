@@ -55,18 +55,19 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#EEE">
-            <Button Name="Menu" Style="{StaticResource HamburgerButtonStyle}" Background="#ffd700" Click="Button_Click"/>
+            <Button Name="Menu" Style="{StaticResource HamburgerButtonStyle}" Background="#DEAA55" Click="Button_Click" Foreground="#222222"/>
             <Grid Margin="50,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition x:Name="TopOfArticle" Width="2*" />
                 </Grid.ColumnDefinitions>
-                <RelativePanel Grid.Column="0">
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
                     <Button Background="#eee" Name="Back" Height="50" Width="50" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xE0D5;" Click="Back_Click"/>
-                    <TextBlock RelativePanel.AlignHorizontalCenterWithPanel="True"
-                               RelativePanel.AlignVerticalCenterWithPanel="True"
-                               Name="DebugTextBlock" FontSize="24" Text="Tjournal" />
-                </RelativePanel>
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="10 0 0 0"
+                               Name="DebugTextBlock" FontSize="18" Text="Tjournal"
+                               FontWeight="SemiBold"/>
+                </StackPanel>
             </Grid>
         </Grid>
         <SplitView Name="SideBar" Style="{StaticResource SplitViewStyle}">
