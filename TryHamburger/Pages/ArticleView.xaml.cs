@@ -84,13 +84,13 @@ namespace TryHamburger.Pages
                             }
                         }
                     }
-                    else if (x.IndexOf("video_extended") > 0)
+                    else if (x.IndexOf("video_extended") > 0) // если видео
                     {
                         var urls = Regex.Split(x.ToString(), "\"remote_id\":\"");
                         var id = Regex.Split(urls[1], "\",\"")[0];
                         var videowidth = MainView.ActualWidth - 50;
                         var videoheight = MainView.ActualWidth*480/800-30;
-                        if (videowidth>650) // На что я трачу свою жизнь...
+                        if (videowidth>650) // то подгоняем удобоваримое соотношение сторон
                         {
                             videowidth = 650;
                             videoheight = 390;
@@ -106,11 +106,11 @@ namespace TryHamburger.Pages
                         webview.NavigateToString(html);
                         MainView.Children.Add(webview);
                     }
-                    else if (x.IndexOf("\"text\",\"data\":{\"text\":")>0)
+                    else if (x.IndexOf("\"text\",\"data\":{\"text\":")>0) // если текст
                     {
                         var str = Regex.Split(x.ToString(), "data\":{\"text\":")[1];
                         var block = Regex.Split(str, ",\"format\":")[0].TrimStart('"').TrimEnd('"');
-                        var paragraphs = Regex.Split(block, "<p>"); // Открыл в себе талант обфускатора.
+                        var paragraphs = Regex.Split(block, "<p>"); // Делим на абзацы
                         foreach(var par in paragraphs)
                         {
                             Run para = new Run();
@@ -120,7 +120,7 @@ namespace TryHamburger.Pages
                             var abzac = Regex.Split(par.ToString(), "</p>");
                             if (abzac[0].IndexOf("<a href=\"") > 0)
                             {
-                                var linkbody = Regex.Split(abzac[0], "</a>");
+                                var linkbody = Regex.Split(abzac[0], "</a>"); // добавляем интерпретацию ссылок
                                 foreach (var link in linkbody)
                                 {
                                     if(link.IndexOf("<a href=\"") >0)
@@ -159,6 +159,11 @@ namespace TryHamburger.Pages
                         var block = str.TrimStart('"').TrimEnd('"');
                         InlineUIContainer InlineUi = new InlineUIContainer();
                         var paragraphs = Regex.Split(block, "<p>");
+
+                        StackPanel stackpanel = new StackPanel();
+                        stackpanel.Background = GetColorFromHexa("#F6F6F6");
+                        stackpanel.MaxWidth = 650;
+
                         foreach (var par in paragraphs)
                         {
                             if (par.Length > 1) // Сколько же во мне аутизма, господи
@@ -170,26 +175,22 @@ namespace TryHamburger.Pages
                                 para.Text = abzac[0];
                                 para.TextWrapping = TextWrapping.Wrap;
                                 para.Margin = new Thickness(20, 20, 20, 20);
-
-                                StackPanel stackpanel = new StackPanel();
-                                stackpanel.Background = GetColorFromHexa("#F6F6F6");
-                                stackpanel.MaxWidth = 650;
+                                
                                 stackpanel.Children.Add(para);
-
-
-                                if (block.IndexOf("\"format\":\"html\",\"cite\":")>0)
-                                {
-                                    TextBlock author = new TextBlock();
-                                    var quote_string = Regex.Split(block, "\"format\":\"html\",\"cite\":")[1].TrimStart('"');
-                                    var quote_author = "– " + Regex.Split(quote_string, "\",\"size\"")[0];
-                                    author.Text = quote_author;
-                                    author.FontWeight = FontWeights.Bold;
-                                    author.Margin = new Thickness(20, 0, 20, 20);
-                                    stackpanel.Children.Add(author);
-                                }                               
-
                                 MainView.Children.Add(stackpanel);
                             }                 
+                        }
+                        if (block.IndexOf("\"format\":\"html\",\"cite\":") > 0)
+                        {
+                            TextBlock author = new TextBlock();
+                            var quote_string = Regex.Split(block, "\"format\":\"html\",\"cite\":")[1].TrimStart('"');
+                            var quote_author = "– " + Regex.Split(quote_string, "\",\"size\"")[0];
+                            author.Text = quote_author;
+                            author.FontWeight = FontWeights.Bold;
+                            author.Margin = new Thickness(20, 0, 20, 20);
+                            author.TextWrapping = TextWrapping.Wrap;
+
+                            stackpanel.Children.Add(author);
                         }
                     }
                     else if(x.IndexOf("heading_styled") > 0)

@@ -55,7 +55,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#EEE">
-            <Button Name="Menu" Style="{StaticResource HamburgerButtonStyle}" Background="#DEAA55" Click="Button_Click" Foreground="#222222"/>
+            <Button Name="Menu" Style="{StaticResource HamburgerButtonStyle}" Background="#DEAA55" Click="Button_Click"/>
             <Grid Margin="50,0,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
