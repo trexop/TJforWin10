@@ -22,7 +22,8 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Column="0" Name="MainView">
-                    <TextBlock Name="ArticleHeader" TextWrapping="Wrap" HorizontalAlignment="Center" MaxWidth="650" FontSize="32" Margin="20"/>
+                    <TextBlock Name="ArticleHeader" TextWrapping="Wrap" HorizontalAlignment="Center" MaxWidth="650" FontSize="32" Margin="20"
+                               FontWeight="Bold"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

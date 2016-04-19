@@ -17,7 +17,7 @@
         <Setter Property="Width" Value="50" />
         <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
         <Setter Property="Content" Value="&#xE700;" />
-        <Setter Property="FontSize" Value="36" />
+        <Setter Property="FontSize" Value="20" />
     </Style>
     <Style TargetType="TextBlock" x:Key="SideBarTextStyle">
         <Setter Property="FontSize" Value="18" />
