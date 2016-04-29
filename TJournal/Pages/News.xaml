@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="TJournal.Pages.News"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TJournal.Pages"
+    xmlns:viewModels="using:TJ.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:TJ.ViewModels"
+    xmlns:newsmodel="using:TJ.Models"
+    DataContext="{Binding Source=ViewModelLocator, Path=News}"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel>
+            <Pivot Name="SortOrderPivot"
+                   VerticalAlignment="Stretch"
+                   Background="White"
+                   ItemsSource="{x:Bind ViewModel.PivotItemsWrapper}">
+                <Pivot.HeaderTemplate>
+                    <DataTemplate x:DataType="data:PivotItems">
+                        <TextBlock Text="{x:Bind Header}"/>
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+                <Pivot.ItemTemplate>
+                    <DataTemplate x:DataType="data:PivotItems">
+                        <ListView ItemsSource="{x:Bind Content}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="newsmodel:NewsApi">
+                                    <TextBlock Text="{x:Bind title}"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DataTemplate>
+                </Pivot.ItemTemplate>
+            </Pivot>
+        </RelativePanel>
+    </Grid>
+</Page>

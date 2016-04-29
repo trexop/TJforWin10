@@ -1,0 +1,140 @@
+﻿<Page
+    x:Class="TJournal.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TJournal"
+    xmlns:viewModels="using:TJ.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:TJ.ViewModels"
+    DataContext="{Binding Source=ViewModelLocator, Path=Main}"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\Static.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid Background="White">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1580"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SideBar.CompactPaneLength" Value="250" />
+                        <Setter Target="SideBar.DisplayMode" Value="CompactInline" />
+                        <Setter Target="TopOfArticle.Width" Value="2*"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SideBar.CompactPaneLength" Value="50" />
+                        <Setter Target="SideBar.DisplayMode" Value="CompactOverlay" />
+                        <Setter Target="TopOfArticle.Width" Value="2*"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SideBar.CompactPaneLength" Value="0" />
+                        <Setter Target="SideBar.DisplayMode" Value="CompactOverlay" />
+                        <Setter Target="TopOfArticle.Width" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#EEE">
+            <Button Name="Menu" Style="{StaticResource HamburgerButtonStyle}" Click="{x:Bind ViewModel.changePaneState}" Background="#DEAA55"/>
+            <Grid Margin="50,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition x:Name="TopOfArticle" Width="2*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <Button Background="#eee" Name="Back" Height="50" Width="50" FontFamily="Segoe MDL2 Assets" FontSize="22" Content="&#xE0D5;" Click="Back_Click"/>
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="10 0 0 0"
+                               Name="DebugTextBlock" FontSize="18" Text="{x:Bind ViewModel.Title}"
+                               FontWeight="SemiBold"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <SplitView Name="SideBar" IsPaneOpen="{x:Bind ViewModel.isPaneOpen, Mode=TwoWay}" Style="{StaticResource SplitViewStyle}">
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+
+                        <StackPanel Grid.Row="0">
+                            <RadioButton Style="{StaticResource SideBarRadioButton}" Name="News"
+                                         GroupName="Navigation" Tag="&#xE8A1;" Checked="RadioButton_Checked">
+                                <Grid Height="38">
+                                    <TextBlock Text="Новости" Style="{StaticResource SideBarTextStyle}"/>
+                                </Grid>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource SideBarRadioButton}"
+                                         GroupName="Navigation" Name="Articles" Tag="&#xE1C2;" Checked="RadioButton_Checked">
+                                <Grid Height="38">
+                                    <TextBlock Text="Статьи" Style="{StaticResource SideBarTextStyle}"/>
+                                </Grid>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource SideBarRadioButton}" Name="Video" 
+                                         GroupName="Navigation" Tag="&#xE20A;" Checked="RadioButton_Checked">
+                                <Grid Height="38">
+                                    <TextBlock Text="Видео" Style="{StaticResource SideBarTextStyle}"/>
+                                </Grid>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource SideBarRadioButton}" Name="Offtop"
+                                         GroupName="Navigation" Tag="&#xE206;" Checked="RadioButton_Checked">
+                                <Grid Height="38">
+                                    <TextBlock Text="Оффтоп" Style="{StaticResource SideBarTextStyle}"/>
+                                </Grid>
+                            </RadioButton>
+                            <RadioButton Style="{StaticResource SideBarRadioButton}" Name="Tweets" 
+                                         GroupName="Navigation" Tag="&#xE128;" Checked="RadioButton_Checked">
+                                <Grid Height="38">
+                                    <TextBlock Text="Твиты" Style="{StaticResource SideBarTextStyle}"/>
+                                </Grid>
+                            </RadioButton>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <StackPanel Grid.Row="1">
+                        <RadioButton Style="{StaticResource SideBarRadioButton}" Name="LogIn" Tag="&#xE1F6;"
+                                     GroupName="Navigation">
+                            <Grid Height="38">
+                                <TextBlock Text="Авторизация" Style="{StaticResource SideBarTextStyle}"/>
+                            </Grid>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource SideBarRadioButton}" Name="Settings" GroupName="Navigation"
+                                     Tag="&#xE115;" Checked="RadioButton_Checked">
+                            <Grid Height="38">
+                                <TextBlock Text="Настройки" Style="{StaticResource SideBarTextStyle}"/>
+                            </Grid>
+                        </RadioButton>
+                    </StackPanel>
+                </Grid>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Frame Name="GeneralFrame"/>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Page>
