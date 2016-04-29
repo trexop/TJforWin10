@@ -36,12 +36,20 @@ namespace TJournal
 
             Object value = localSettings.Values["DefaultPage"]; // Получить настройки стартовой страницы и навигировать
 
-            if (value.ToString() == "Editorial")
+            if (value != null)
+            {
+                if (value.ToString() == "Editorial")
+                {
+                    GeneralFrame.Navigate(typeof(News), "News");
+                }
+                else
+                {
+                    GeneralFrame.Navigate(typeof(News), value.ToString());
+                }
+            }
+            else
             {
                 GeneralFrame.Navigate(typeof(News), "News");
-            } else
-            {
-                GeneralFrame.Navigate(typeof(News), value.ToString());
             }
         }
         public MainPageViewModel ViewModel { get; set; }
