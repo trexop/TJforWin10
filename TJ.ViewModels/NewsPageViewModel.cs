@@ -13,6 +13,7 @@ using TJ.GetData;
 using TJ.Models;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 namespace TJ.ViewModels
@@ -45,6 +46,19 @@ namespace TJ.ViewModels
             set
             {
                 _parameter = value;
+            }
+        }
+
+        private string _rating_color;
+        public string rating_color
+        {
+            get
+            {
+                return _rating_color;
+            }
+            set
+            {
+                _rating_color = value;
             }
         }
 
@@ -114,7 +128,7 @@ namespace TJ.ViewModels
                     await Facade.PopulateLatestNewsAsync(TjOfftopUnadmitted, "unadmitted", 2);
 
                     PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjOfftop });
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjOfftopUnadmitted });
+                    PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjOfftopUnadmitted }); // При навигации сюда падает, я в курсе
                     break;
             }
         }

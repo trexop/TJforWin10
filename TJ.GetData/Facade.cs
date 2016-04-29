@@ -21,6 +21,18 @@ namespace TJ.GetData
             var newsWrapper = await GetNewsDataWrapperAsync(sorting, Type);
             foreach (var item in newsWrapper)
             {
+                if (item.likes.summ > 0)
+                {
+                    item.likes.color = "#008542";
+                }
+                else if (item.likes.summ < 0)
+                {
+                    item.likes.color = "#DD0000";
+                }
+                else
+                {
+                    item.likes.color = "#eee";
+                }
                 string[] date = item.dateRFC.Split(' ');
                 item.dateRFC = date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
                 string pattern = "<[^>]*>"; // режем html-теги

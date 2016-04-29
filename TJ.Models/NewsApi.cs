@@ -57,6 +57,7 @@ namespace TJ.Models
         public int isLiked { get; set; }
         public bool isHidden { get; set; }
         public object hash { get; set; }
+        public string color { get; set; }
     }
 
     public class NewsApi

@@ -51,6 +51,7 @@ namespace TJournal
             {
                 GeneralFrame.Navigate(typeof(News), "News");
             }
+
         }
         public MainPageViewModel ViewModel { get; set; }
 

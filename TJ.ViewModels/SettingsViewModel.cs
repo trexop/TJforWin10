@@ -33,7 +33,7 @@ namespace TJ.ViewModels
 
         public async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var link = new Uri("mailto:admin@kyubey.ru");
+            var link = new Uri("mailto:quobre@gmail.com");
             await Windows.System.Launcher.LaunchUriAsync(link);
         }
 
@@ -41,6 +41,20 @@ namespace TJ.ViewModels
         {
             var link = new Uri("https://github.com/trexop/TJforWin10");
             await Windows.System.Launcher.LaunchUriAsync(link);
+        }
+
+        public bool _news_content_visible { get; set; }
+        public bool news_content_visible
+        {
+            get
+            {
+                return _news_content_visible;
+            }
+            set
+            {
+                _news_content_visible = value;
+                this.OnPropertyChanged("news_content_visible");
+            }
         }
 
         public List<ComboBoxItem> ComboBoxItems { get; set; }
@@ -60,7 +74,12 @@ namespace TJ.ViewModels
         public void PopulateComboboxItems()
         {
             ComboBoxItems = new List<ComboBoxItem>();
-            var DefaultPageValue = localSettings.Values["DefaultPage"].ToString();
+            string DefaultPageValue = "News";
+
+            if (localSettings.Values["DefaultPage"] != null)
+            {
+                DefaultPageValue = localSettings.Values["DefaultPage"].ToString();
+            }
 
             ComboBoxItems.Add(new ComboBoxItem { Name = "News", Content = "Новости/Главное"});
             ComboBoxItems.Add(new ComboBoxItem { Name = "Editorial", Content = "Новости/Редакция" });

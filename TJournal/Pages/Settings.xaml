@@ -23,15 +23,16 @@
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
+                        <RowDefinition MinHeight="50" Height="auto"/>
+                        <RowDefinition MinHeight="50" Height="auto"/>
+                        <RowDefinition MinHeight="50" Height="auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock VerticalAlignment="Center"
-                               Grid.Column="0" 
                                Grid.Row="0"
                                FontSize="18"
                                Text="Открывать при запуске"/>
-                    <ComboBox Grid.Row="0" 
-                              Grid.Column="1" 
+                    <ComboBox Grid.Row="1" 
                               VerticalAlignment="Center" 
                               Margin="20,0,0,0"
                               Name="DefaultPageSelector"
@@ -47,13 +48,11 @@
                     </ComboBox>
 
                     <TextBlock VerticalAlignment="Center"
-                               Grid.Column="0" 
-                               Grid.Row="1"
+                               Grid.Row="2" 
                                FontSize="18"
                                Text="Загружать записей за раз"/>
                     
-                    <ComboBox Grid.Row="1" 
-                              Grid.Column="1" 
+                    <ComboBox Grid.Row="3"  
                               VerticalAlignment="Center" 
                               Margin="20,0,0,0">
                         <ComboBoxItem Content="20 (Быстрее)" />
@@ -63,18 +62,21 @@
                     </ComboBox>
 
                     <TextBlock VerticalAlignment="Center"
-                               Grid.Column="0" 
-                               Grid.Row="2"
+                               Grid.Row="4"
                                FontSize="18"
                                Text="Отображать только заголовки"/>
 
-                    <CheckBox Grid.Row="2" 
+                    <CheckBox Grid.Row="4" 
                               Grid.Column="1" 
                               VerticalAlignment="Center" 
                               Margin="20,0,0,0"
                               IsChecked="False">
                         
                     </CheckBox>
+
+                    <TextBlock Grid.Row="5" TextWrapping="Wrap" MaxWidth="350" FontSize="16"
+                               Foreground="LightGray"
+                               Text="Чтобы изменения втсупили в силу, нужно перезагрузить приложение"/>
                 </Grid>
             </PivotItem>
             <PivotItem Header="О приложении">
@@ -112,7 +114,7 @@
                                    Foreground="Gray" 
                                    Grid.Row="1" 
                                    VerticalAlignment="Center"
-                                   Text="admin@kyubey.ru"/>
+                                   Text="quobre@gmail.com"/>
                         </Grid>
                     </Button>
                     <Button RelativePanel.Below="Contact"

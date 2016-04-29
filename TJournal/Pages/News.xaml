@@ -8,11 +8,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:TJ.ViewModels"
     xmlns:newsmodel="using:TJ.Models"
+    Loaded="Page_Loaded"
     DataContext="{Binding Source=ViewModelLocator, Path=News}"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <RelativePanel>
+    <Grid Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1180"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArticleView.Visibility" Value="Visible" />
+                        <Setter Target="NewsList.Width" Value="1*" />
+                        <Setter Target="Article.Width" Value="2*" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ArticleView.Visibility" Value="Collapsed" />
+                        <Setter Target="NewsList.Width" Value="auto" />
+                        <Setter Target="NewsList.MaxWidth" Value="550" />
+                        <Setter Target="Article.Width" Value="*" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="NewsList" MaxWidth="550" Width="1*"/>
+            <ColumnDefinition x:Name="Article" Width="2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <RelativePanel Grid.Column="0">
+            <ProgressRing Foreground="Gray" 
+                          Height="50" Width="50" 
+                          RelativePanel.AlignHorizontalCenterWithPanel="True" 
+                          RelativePanel.AlignVerticalCenterWithPanel="True" 
+                          Name="Loading"/>
             <Pivot Name="SortOrderPivot"
                    VerticalAlignment="Stretch"
                    Background="White"
@@ -24,16 +62,90 @@
                 </Pivot.HeaderTemplate>
                 <Pivot.ItemTemplate>
                     <DataTemplate x:DataType="data:PivotItems">
-                        <ListView ItemsSource="{x:Bind Content}">
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="newsmodel:NewsApi">
-                                    <TextBlock Text="{x:Bind title}"/>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
+                        <RelativePanel HorizontalAlignment="Stretch">
+                            <ScrollViewer VerticalScrollBarVisibility="auto"
+                                      RelativePanel.AlignLeftWithPanel="True" 
+                                      RelativePanel.AlignRightWithPanel="True">
+                                <ListView Name="MasterListView"
+                                      MaxWidth="480"
+                                  ItemsSource="{x:Bind Content}"
+                                  ItemClick="MasterListView_ItemClick">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="newsmodel:NewsApi">
+                                            <RelativePanel BorderBrush="LightGray"
+                                                   BorderThickness="0,1,0,0"
+                                                   Margin="10,10,10,10"
+                                                   MaxWidth="450"
+                                                   RightTapped="RelativePanel_RightTapped">
+                                                <FlyoutBase.AttachedFlyout>
+                                                    <MenuFlyout>
+                                                        <MenuFlyoutItem Name="OpenInBrowser" 
+                                                                Text="Открыть в браузере"
+                                                                Click="OpenInBrowser_Click"/>
+                                                    </MenuFlyout>
+                                                </FlyoutBase.AttachedFlyout>
+                                                <StackPanel Name="Author" Orientation="Horizontal">
+                                                    <Image Name="Avatar" Source="{x:Bind author.profile_image_url}" Height="50" Width="50"></Image>
+                                                    <RelativePanel Margin="10,0,0,0">
+                                                        <TextBlock Text="{x:Bind author.name}" RelativePanel.AlignTopWithPanel="True"></TextBlock>
+                                                        <TextBlock Text="{x:Bind dateRFC}" RelativePanel.AlignBottomWithPanel="True"></TextBlock>
+                                                    </RelativePanel>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal" Height="50" RelativePanel.AlignRightWithPanel="True">
+                                                    <RelativePanel>
+                                                        <TextBlock Text="{x:Bind hits}" RelativePanel.AlignTopWithPanel="True"
+                                                                   RelativePanel.AlignRightWithPanel="True"/>
+                                                        <TextBlock Text="{x:Bind commentsCount}" RelativePanel.AlignBottomWithPanel="True"
+                                                                   RelativePanel.AlignRightWithPanel="True"/>
+                                                    </RelativePanel>
+                                                    <RelativePanel Margin="10,4,0,2">
+                                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE890;" RelativePanel.AlignTopWithPanel="True"/>
+                                                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8F2;" RelativePanel.AlignBottomWithPanel="True"/>
+                                                    </RelativePanel>
+                                                </StackPanel>
+                                                <RelativePanel Name="Title" HorizontalAlignment="Stretch"
+                                                               RelativePanel.Below="Author" 
+                                                               RelativePanel.AlignLeftWithPanel="True" 
+                                                               RelativePanel.AlignRightWithPanel="True">
+                                                    <TextBlock Margin="0,10,10,10" Grid.Column="0"
+                                                               RelativePanel.LeftOf="LikesCount"
+                                                               RelativePanel.AlignLeftWithPanel="True"
+                                                               TextWrapping="Wrap" FontSize="18" Text="{x:Bind title}"/>
+                                                    <RelativePanel Margin="10,0,0,0"
+                                                                   Name="LikesCount"
+                                                                   Width="55"
+                                                                   RelativePanel.AlignRightWithPanel="True"
+                                                                   RelativePanel.AlignBottomWithPanel="True"
+                                                                   RelativePanel.AlignTopWithPanel="True">
+                                                        <TextBlock Text="{x:Bind likes.summ}" 
+                                                                   FontSize="24"
+                                                                   RelativePanel.AlignRightWithPanel="True"
+                                                                   RelativePanel.AlignVerticalCenterWithPanel="True" 
+                                                                   Foreground="{x:Bind likes.color}"/>
+                                                    </RelativePanel>
+                                                </RelativePanel>
+                                                <RichTextBlock RelativePanel.Below="Title" Name="ArticleText" Grid.Column="0">
+                                                    <Paragraph>
+                                                        <Run Text="{x:Bind intro}"/>
+                                                    </Paragraph>
+                                                </RichTextBlock>
+                                                <Image RelativePanel.Below="ArticleText" 
+                                               RelativePanel.AlignLeftWithPanel="True" 
+                                               RelativePanel.AlignRightWithPanel="True" 
+                                               Margin="10,10,10,0" MaxHeight="120" 
+                                               Stretch="UniformToFill" RelativePanel.RightOf="ArticleText" 
+                                               Source="{x:Bind cover.url}" />
+                                            </RelativePanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </ScrollViewer>
+                        </RelativePanel>
                     </DataTemplate>
                 </Pivot.ItemTemplate>
             </Pivot>
         </RelativePanel>
+        <Frame Grid.Column="1" Name="ArticleView"
+               BorderBrush="#eee" BorderThickness="5,0,0,0"/>
     </Grid>
 </Page>
