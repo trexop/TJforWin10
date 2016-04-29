@@ -56,14 +56,7 @@ namespace TJournal.Pages
             var selectedItem = (NewsApi)e.ClickedItem;
             var ArticleId = selectedItem.id;
 
-            if (ArticleView.Visibility == Visibility.Collapsed)
-            {
-                Frame.Navigate(typeof(ArticleView), ArticleId);
-            }
-            else
-            {
-                ArticleView.Navigate(typeof(ArticleView), ArticleId);
-            }
+            Frame.Navigate(typeof(ArticleView), ArticleId);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

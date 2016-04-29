@@ -9,19 +9,24 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TJ.Models;
+using Windows.UI.Xaml;
 
 namespace TJ.GetData
 {
     public class Facade
     {
+
         private const string APIVersion = "2.2";
 
-        public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type)
+        public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count)
         {
-            var newsWrapper = await GetNewsDataWrapperAsync(sorting, Type);
+            var newsWrapper = await GetNewsDataWrapperAsync(sorting, Type, Count);
+            Windows.Storage.ApplicationDataContainer localSettings =
+                Windows.Storage.ApplicationData.Current.LocalSettings;
+
             foreach (var item in newsWrapper)
             {
-                if (item.likes.summ > 0)
+                if (item.likes.summ > 0) // Настраиваем цвет рейтинга
                 {
                     item.likes.color = "#008542";
                 }
@@ -33,6 +38,21 @@ namespace TJ.GetData
                 {
                     item.likes.color = "#eee";
                 }
+
+                bool temp = false;
+                if (localSettings.Values["NewsContentVisible"] != null)
+                {
+                    Boolean.TryParse(localSettings.Values["NewsContentVisible"].ToString(), out temp);
+                }
+                if (temp == true)
+                {
+                    item.ShowNewsDetailsInSidebar = Visibility.Collapsed;
+                }
+                else
+                {
+                    item.ShowNewsDetailsInSidebar = Visibility.Visible;
+                }
+
                 string[] date = item.dateRFC.Split(' ');
                 item.dateRFC = date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
                 string pattern = "<[^>]*>"; // режем html-теги
@@ -49,9 +69,9 @@ namespace TJ.GetData
                 tweets.Add(tweet);
             }
         }
-        private static async Task<List<NewsApi>> GetNewsDataWrapperAsync(string sortMode, int Type)
+        private static async Task<List<NewsApi>> GetNewsDataWrapperAsync(string sortMode, int Type, int Count)
         {
-            string url = String.Format("https://api.tjournal.ru/{0}/club?sortMode={1}&type={2}", APIVersion, sortMode, Type.ToString());
+            string url = String.Format("https://api.tjournal.ru/{0}/club?sortMode={1}&type={2}&count={3}", APIVersion, sortMode, Type.ToString(), Count.ToString());
 
             HttpClient http = new HttpClient();
             var response = await http.GetAsync(url);

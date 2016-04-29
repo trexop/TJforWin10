@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace TJ.Models
 {
@@ -57,6 +58,7 @@ namespace TJ.Models
         public int isLiked { get; set; }
         public bool isHidden { get; set; }
         public object hash { get; set; }
+        // custom properties
         public string color { get; set; }
     }
 
@@ -90,5 +92,7 @@ namespace TJ.Models
         public bool isComplexMarkup { get; set; }
         public bool isBigPicture { get; set; }
         public int editedByEditor { get; set; }
+        // custom properties
+        public Visibility ShowNewsDetailsInSidebar { get; set; }
     }
 }

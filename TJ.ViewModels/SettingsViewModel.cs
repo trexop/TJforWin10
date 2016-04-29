@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace TJ.ViewModels
 {
@@ -43,18 +44,54 @@ namespace TJ.ViewModels
             await Windows.System.Launcher.LaunchUriAsync(link);
         }
 
-        public bool _news_content_visible { get; set; }
-        public bool news_content_visible
+        public double _OnetimeLoadedItems { get; set; }
+        public double OnetimeLoadedItems
         {
             get
             {
-                return _news_content_visible;
+                double temp = 30;
+                if (localSettings.Values["NumberOfOnetimeLoadedItems"] != null)
+                {
+                    temp = double.Parse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString());
+                }
+                return temp;
+            }
+            set
+            {
+                _OnetimeLoadedItems = value;
+                this.OnPropertyChanged("OnetimeLoadedItems");
+            }
+        }
+
+
+        public Boolean? _news_content_visible { get; set; } // Состояние галочки "показывать содержимое новости"
+        public Boolean? news_content_visible
+        {
+            get
+            {
+                bool temp = false;
+                if (localSettings.Values["NewsContentVisible"] != null)
+                {
+                    Boolean.TryParse(localSettings.Values["NewsContentVisible"].ToString(), out temp);
+                }
+                return temp;
             }
             set
             {
                 _news_content_visible = value;
                 this.OnPropertyChanged("news_content_visible");
             }
+        }
+
+        public void Checkbox_checked()
+        {
+            news_content_visible = true;
+            localSettings.Values["NewsContentVisible"] = true;
+        }
+        public void Checkbox_unchecked()
+        {
+            news_content_visible = false;
+            localSettings.Values["NewsContentVisible"] = false;
         }
 
         public List<ComboBoxItem> ComboBoxItems { get; set; }
@@ -71,6 +108,7 @@ namespace TJ.ViewModels
                 _DefaultPageSelectedItem = value; OnPropertyChanged("DefaultPageSelectedItem");
             }
         }
+
         public void PopulateComboboxItems()
         {
             ComboBoxItems = new List<ComboBoxItem>();

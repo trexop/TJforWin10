@@ -16,9 +16,12 @@
                 <Grid Margin="20,20,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition MinWidth="50" Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition MinHeight="50" Height="auto"/>
+                        <RowDefinition MinHeight="50" Height="auto"/>
+                        <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
@@ -34,7 +37,6 @@
                                Text="Открывать при запуске"/>
                     <ComboBox Grid.Row="1" 
                               VerticalAlignment="Center" 
-                              Margin="20,0,0,0"
                               Name="DefaultPageSelector"
                               ItemsSource="{x:Bind ViewModel.ComboBoxItems}"
                               SelectedItem="{x:Bind ViewModel.DefaultPageSelectedItem}"
@@ -51,32 +53,30 @@
                                Grid.Row="2" 
                                FontSize="18"
                                Text="Загружать записей за раз"/>
-                    
-                    <ComboBox Grid.Row="3"  
-                              VerticalAlignment="Center" 
-                              Margin="20,0,0,0">
-                        <ComboBoxItem Content="20 (Быстрее)" />
-                        <ComboBoxItem Content="30" IsSelected="True"/>
-                        <ComboBoxItem Content="50 (Медлен
-                                      но"/>
-                    </ComboBox>
+
+                    <Slider Grid.Row="3" 
+                            Width="200" 
+                            Minimum="1" 
+                            Maximum="50" 
+                            Height="38" 
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Left" 
+                            Value="{x:Bind ViewModel.OnetimeLoadedItems, Mode=TwoWay}"/>
 
                     <TextBlock VerticalAlignment="Center"
+                               TextWrapping="Wrap"
                                Grid.Row="4"
                                FontSize="18"
                                Text="Отображать только заголовки"/>
 
-                    <CheckBox Grid.Row="4" 
-                              Grid.Column="1" 
+                    <CheckBox Grid.Row="5" 
+                              Grid.Column="0" 
                               VerticalAlignment="Center" 
-                              Margin="20,0,0,0"
-                              IsChecked="False">
-                        
-                    </CheckBox>
+                              Checked="{x:Bind ViewModel.Checkbox_checked}"
+                              Unchecked="{x:Bind ViewModel.Checkbox_unchecked}"
+                              IsChecked="{x:Bind ViewModel.news_content_visible, Mode=TwoWay}">
 
-                    <TextBlock Grid.Row="5" TextWrapping="Wrap" MaxWidth="350" FontSize="16"
-                               Foreground="LightGray"
-                               Text="Чтобы изменения втсупили в силу, нужно перезагрузить приложение"/>
+                    </CheckBox>
                 </Grid>
             </PivotItem>
             <PivotItem Header="О приложении">
