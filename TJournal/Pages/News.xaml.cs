@@ -37,7 +37,7 @@ namespace TJournal.Pages
             ViewModel.SetPivotItems();
         }
 
-        private void RelativePanel_RightTapped(object sender, RightTappedRoutedEventArgs e) // Да, вся навигация будет в кодбехайнде. Перетаскивать всё VM мне лично неудобно.
+        private void RelativePanel_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement senderElement = sender as FrameworkElement;
             FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
@@ -51,18 +51,20 @@ namespace TJournal.Pages
             await Windows.System.Launcher.LaunchUriAsync(link);
         }
 
-        private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            var selectedItem = (NewsApi)e.ClickedItem;
-            var ArticleId = selectedItem.id;
-
-            Frame.Navigate(typeof(ArticleView), ArticleId);
-        }
-
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Loading.IsActive = true;
             Loading.Visibility = Visibility.Visible;
+        }
+
+        private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Debug.WriteLine("Fired!");
+
+            var selectedItem = (NewsApi)e.ClickedItem;
+            var ArticleId = selectedItem.id;
+
+            Frame.Navigate(typeof(ArticleView), ArticleId);
         }
     }
 }

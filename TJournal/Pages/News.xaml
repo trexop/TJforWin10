@@ -31,9 +31,10 @@
             <Pivot.ItemTemplate>
                 <DataTemplate x:DataType="data:PivotItems">
                     <ListView Name="MasterListView"
-                                      ScrollViewer.VerticalScrollBarVisibility="Visible"
-                                  ItemsSource="{x:Bind Content}"
-                                  ItemClick="MasterListView_ItemClick">
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ItemsSource="{x:Bind Content}"
+                              IsItemClickEnabled="True"
+                              ItemClick="MasterListView_ItemClick">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

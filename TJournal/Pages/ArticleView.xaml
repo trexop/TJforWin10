@@ -7,7 +7,94 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    </Grid>
+    <RelativePanel Background="White">
+        <RelativePanel Height="155" 
+                       BorderBrush="#eee"
+                       BorderThickness="0,0,0,5"
+                       RelativePanel.AlignRightWithPanel="True"
+                       RelativePanel.AlignLeftWithPanel="True">
+            <StackPanel Height="110"
+                        Name="Author"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        Orientation="Horizontal"
+                        Margin="20,0,0,0">
+                <StackPanel BorderBrush="#eee"
+                            BorderThickness="5">
+                    <Image Height="100"
+                       Width="100"
+                       Stretch="UniformToFill"
+                       Source="{x:Bind ArticleInfo.author.profile_big_image_url, Mode=TwoWay}"/>
+                </StackPanel>
+                <RelativePanel>
+                    <TextBlock Margin="20,10,20,0"
+                               RelativePanel.AlignTopWithPanel="True" 
+                               Text="{x:Bind ArticleInfo.dateRFC, Mode=TwoWay}"
+                               FontSize="18"/>
+                    <TextBlock Margin="20,0,20,10" 
+                               RelativePanel.AlignBottomWithPanel="True" 
+                               Text="{x:Bind ArticleInfo.author.name, Mode=TwoWay}"
+                               FontSize="32"/>
+                </RelativePanel>
+            </StackPanel>
+            <StackPanel Height="100"
+                        Name="ArticleInformation"
+                        Orientation="Horizontal"
+                        RelativePanel.AlignVerticalCenterWithPanel="True"
+                        RelativePanel.AlignRightWithPanel="True">
+                <RelativePanel Height="100">
+                    <TextBlock RelativePanel.AlignTopWithPanel="True"
+                               Margin="0,10,10,0"
+                               FontFamily="Segoe MDL2 Assets" Text="&#xE890;"
+                               FontSize="24"/>
+                    <TextBlock RelativePanel.AlignBottomWithPanel="True"
+                               Margin="0,0,0,10"
+                               FontFamily="Segoe MDL2 Assets" Text="&#xE8F2;"
+                               FontSize="24"/>
+                </RelativePanel>
+                <RelativePanel>
+                    <TextBlock Margin="20,10,20,0"
+                               RelativePanel.AlignTopWithPanel="True" 
+                               Text="{x:Bind ArticleInfo.hits, Mode=TwoWay}"
+                               FontSize="18"/>
+                    <TextBlock Margin="20,0,20,10" 
+                               RelativePanel.AlignBottomWithPanel="True" 
+                               Text="{x:Bind ArticleInfo.commentsCount, Mode=TwoWay}"
+                               FontSize="20"/>
+                </RelativePanel>
+                <RelativePanel>
+                    <TextBlock Margin="20,0,20,0"
+                               RelativePanel.AlignTopWithPanel="True" 
+                               RelativePanel.AlignRightWithPanel="True"
+                               Text="{x:Bind ArticleInfo.likes.summ, Mode=TwoWay}"
+                               FontSize="42"/>
+                    <RichTextBlock Margin="20,0,20,10" 
+                               RelativePanel.AlignBottomWithPanel="True"
+                                   RelativePanel.AlignRightWithPanel="True"
+                               FontSize="18"
+                               Foreground="Gray">
+                        <Paragraph>
+                            <InlineUIContainer>
+                                <TextBlock>
+                                    <Run Text="{x:Bind ArticleInfo.likes.count, Mode=OneWay}"/>
+                                    <Run Text="Оценок(ки)"/>
+                                </TextBlock>
+                            </InlineUIContainer>
+                        </Paragraph>
+                    </RichTextBlock>
+                </RelativePanel>
+            </StackPanel>
+            <RelativePanel RelativePanel.Below="ArticleInformation"
+                           RelativePanel.AlignRightWithPanel="True"
+                           Height="25" Width="250"
+                           Visibility="{x:Bind SponsoredBadgeVisibility, Mode=TwoWay}"
+                           Background="Gold"
+                           Margin="0,0,20,0">
+                <TextBlock Text="Спонсорский"
+                           RelativePanel.AlignHorizontalCenterWithPanel="True"
+                           RelativePanel.AlignVerticalCenterWithPanel="True"
+                           Foreground="White"
+                           FontWeight="Bold"/>
+            </RelativePanel>
+        </RelativePanel>
+    </RelativePanel>
 </Page>

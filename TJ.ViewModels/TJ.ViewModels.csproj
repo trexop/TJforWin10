@@ -107,6 +107,7 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArticleViewModel.cs" />
     <Compile Include="MainPageViewModel.cs" />
     <Compile Include="NewsPageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

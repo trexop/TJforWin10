@@ -69,6 +69,7 @@ namespace TJ.GetData
                 tweets.Add(tweet);
             }
         }
+
         private static async Task<List<NewsApi>> GetNewsDataWrapperAsync(string sortMode, int Type, int Count)
         {
             string url = String.Format("https://api.tjournal.ru/{0}/club?sortMode={1}&type={2}&count={3}", APIVersion, sortMode, Type.ToString(), Count.ToString());
@@ -83,6 +84,7 @@ namespace TJ.GetData
             var result = (List<NewsApi>)serializer.ReadObject(ms);
             return result;
         }
+
         public static async Task<List<TweetsApi>> GetTweetsWrapper()
         {
             string url = String.Format("https://api.tjournal.ru/{0}/tweets", APIVersion);
@@ -97,7 +99,8 @@ namespace TJ.GetData
             var result = (List<TweetsApi>)ser.ReadObject(ms);
             return result;
         }
-        public static async Task<RootObject> GetArticleEntryJSONasync(int id)
+
+        public static async Task<ArticleWrapper> GetArticleEntryJSONasync(int id)
         {
             string url = String.Format("https://api.tjournal.ru/2.2/club/item?entryId={0}", id);
 
@@ -105,10 +108,20 @@ namespace TJ.GetData
             var response = await http.GetAsync(url);
             var jsonMessage = await response.Content.ReadAsStringAsync();
 
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(RootObject));
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ArticleWrapper));
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonMessage));
 
-            var result = (RootObject)ser.ReadObject(ms);
+            var result = (ArticleWrapper)ser.ReadObject(ms);
+            return result;
+        }
+
+        public static ArticleContent ParseEntryJSON(string str)
+        {
+            string json = str.Replace("\\\\|<br />", "");
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ArticleContent));
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
+
+            var result = (ArticleContent)ser.ReadObject(ms);
             return result;
         }
     }
