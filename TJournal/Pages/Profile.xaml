@@ -7,7 +7,46 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    </Grid>
+    <RelativePanel Name="MainView" Background="White">
+        
+        <Border
+            Name="Front_Image"
+            BorderBrush="#eee"
+                BorderThickness="5"
+                Width="210"
+                Height="210"
+                VerticalAlignment="Top" 
+                Margin="20">
+            <Image Height="200" Width="200"
+                   Source="{x:Bind ProfileData.profile_big_image_url, Mode=TwoWay}"/>
+        </Border>
+        <Grid Height="210" VerticalAlignment="Top" Margin="0,20,0,0"
+              RelativePanel.RightOf="Front_Image">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{x:Bind ProfileData.name, Mode=OneWay}" VerticalAlignment="Center"
+                       FontSize="32" FontWeight="Medium"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
+                <TextBlock Text="{x:Bind ProfileData.rating.karma, Mode=OneWay}"
+                           Foreground="{x:Bind ProfileData.carmaColor, Mode=OneWay}" FontSize="42"/>
+                <RelativePanel>
+                    <TextBlock Text="{x:Bind ProfileData.rating.karmaCount, Mode=OneWay}"
+                               RelativePanel.AlignTopWithPanel="True" Foreground="Gray"
+                               Margin="20,10,0,0"/>
+                    <TextBlock Text="Оценки" VerticalAlignment="Bottom" Foreground="Gray"
+                               RelativePanel.AlignBottomWithPanel="True" Margin="20,0,0,0"/>
+                </RelativePanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Row="2">
+                <TextBlock Text="Зарегистрирован" FontSize="18" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind ProfileData.date, Mode=OneWay}" FontSize="18" VerticalAlignment="Center"
+                           Margin="20,0,0,0"/>
+            </StackPanel>
+        </Grid>
+        <Ellipse Visibility="{x:Bind IsOnline, Mode=OneWay}" Fill="Green" Margin="10" Height="30" Width="30"/>
+    </RelativePanel>
 </Page>

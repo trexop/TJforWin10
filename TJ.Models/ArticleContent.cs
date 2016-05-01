@@ -22,9 +22,14 @@ namespace TJ.Models
         public File file { get; set; }
         public string caption { get; set; }
         public bool cover { get; set; }
+        public string source { get; set; }
+        public string remote_id { get; set; }
         public string text { get; set; }
         public string format { get; set; }
         public string introText { get; set; }
+        public string thumbnailUrl { get; set; }
+        public int? width { get; set; }
+        public int? height { get; set; }
         public string cite { get; set; }
         public string size { get; set; }
     }

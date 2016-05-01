@@ -96,8 +96,8 @@
                                         </RelativePanel>
                                     </RelativePanel>
                                     <RichTextBlock RelativePanel.Below="Title"
-                                                               Visibility="{x:Bind ShowNewsDetailsInSidebar}"
-                                                               Name="ArticleText" Grid.Column="0">
+                                                   Visibility="{x:Bind ShowNewsDetailsInSidebar}"
+                                                   Name="ArticleText" Grid.Column="0">
                                         <Paragraph>
                                             <Run Text="{x:Bind intro}"/>
                                         </Paragraph>

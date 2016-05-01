@@ -112,6 +112,7 @@
     <Compile Include="NewsPageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsViewModel.cs" />
+    <Compile Include="TweetsViewModel.cs" />
     <Compile Include="ViewModelHelper.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <EmbeddedResource Include="Properties\TJ.ViewModels.rd.xml" />

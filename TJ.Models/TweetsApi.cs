@@ -41,5 +41,9 @@ namespace TJ.Models
         public bool isFavorited { get; set; }
         public string security_user_hash { get; set; }
         public int created_at { get; set; }
+        // custom properties
+        public string short_link { get; set; }
+        public string long_link { get; set; }
+        public string hr_link { get; set; }
     }
 }

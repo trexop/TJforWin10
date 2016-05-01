@@ -94,6 +94,51 @@ namespace TJ.ViewModels
             localSettings.Values["NewsContentVisible"] = false;
         }
 
+        private double _FontSize { get; set; }
+        public double FontSize
+        {
+            get
+            {
+                if (localSettings.Values["FontSize"] != null)
+                {
+                    return double.Parse(localSettings.Values["FontSize"].ToString());
+                }
+                else return 18;
+            }
+            set
+            {
+                _FontSize = value;
+                localSettings.Values["FontSize"] = _FontSize;
+                this.OnPropertyChanged("FontSize");
+            }
+        }
+
+        public void DecreaseFontSize()
+        {
+            if (localSettings.Values["FontSize"] == null)
+            {
+                FontSize = 18;
+            }
+            else
+            {
+                var FS = double.Parse(localSettings.Values["FontSize"].ToString());
+                FontSize = FS - 1;
+            }
+        }
+
+        public void IncreaseFontSize()
+        {
+            if (localSettings.Values["FontSize"] == null)
+            {
+                FontSize = 18;
+            }
+            else
+            {
+                var FS = double.Parse(localSettings.Values["FontSize"].ToString());
+                FontSize = FS + 1;
+            }
+        }
+
         public List<ComboBoxItem> ComboBoxItems { get; set; }
 
         private ComboBoxItem _DefaultPageSelectedItem = new ComboBoxItem();
@@ -111,6 +156,7 @@ namespace TJ.ViewModels
 
         public void PopulateComboboxItems()
         {
+
             ComboBoxItems = new List<ComboBoxItem>();
             string DefaultPageValue = "News";
 

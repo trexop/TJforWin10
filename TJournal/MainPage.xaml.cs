@@ -79,7 +79,7 @@ namespace TJournal
                     DebugTextBlock.Text = "Оффтоп";
                     break;
                 case "Tweets":
-                    //GeneralFrame.Navigate(typeof(Tweets));
+                    GeneralFrame.Navigate(typeof(Tweets));
                     DebugTextBlock.Text = "Твиты";
                     break;
                 case "Settings":

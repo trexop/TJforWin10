@@ -110,6 +110,7 @@
     <Compile Include="ArticleApi.cs" />
     <Compile Include="ArticleContent.cs" />
     <Compile Include="NewsApi.cs" />
+    <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TweetsApi.cs" />
     <EmbeddedResource Include="Properties\TJ.Models.rd.xml" />

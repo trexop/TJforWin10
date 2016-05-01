@@ -4,10 +4,124 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TJournal.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:data="using:TJ.ViewModels"
+    xmlns:tweetsmodel="using:TJ.Models"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel>
+            <ProgressRing Foreground="Gray" 
+                          Height="50" Width="50" 
+                          RelativePanel.AlignHorizontalCenterWithPanel="True" 
+                          RelativePanel.AlignVerticalCenterWithPanel="True" 
+                          Name="Loading"/>
+            <Pivot Name="SortOrderPivot"
+                   VerticalAlignment="Stretch"
+                   HorizontalAlignment="Center"
+                   Background="White"
+                   ItemsSource="{x:Bind ViewModel.PivotItemsWrapper}">
+                <Pivot.HeaderTemplate>
+                    <DataTemplate x:DataType="data:TweetsPivotItems">
+                        <TextBlock Text="{x:Bind Header}"/>
+                    </DataTemplate>
+                </Pivot.HeaderTemplate>
+                <Pivot.ItemTemplate>
+                    <DataTemplate x:DataType="data:TweetsPivotItems">
+                        <ListView Name="MasterListView"
+                          IsItemClickEnabled="False"
+                          ItemsSource="{x:Bind Content}"
+                          HorizontalAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="MaxWidth" Value="550"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="tweetsmodel:TweetsApi">
+                                    <RelativePanel RightTapped="RelativePanel_RightTapped" BorderBrush="LightGray" BorderThickness="1,1,1,1" Margin="0,10,0,10">
+                                        
+                                        <FlyoutBase.AttachedFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Name="replyTo" 
+                                                                Text="Ответить"
+                                                                Click="replyTo_Click"/>
+                                                <MenuFlyoutItem Name="retweet" 
+                                                                Text="Ретвитнуть"
+                                                                Click="retweet_Click"/>
+                                                <MenuFlyoutItem Name="favorite" 
+                                                                Text="Лайкнуть"
+                                                                Click="favorite_Click"/>
+                                            </MenuFlyout>
+                                        </FlyoutBase.AttachedFlyout>
 
+                                        <StackPanel Name="Author" Orientation="Horizontal">
+                                            <Image Name="Avatar" Height="50" Margin="10,10,0,0" Source="{x:Bind user.profile_image_url_bigger}"/>
+                                            <RelativePanel Height="50" Margin="10,10,0,0">
+                                                <TextBlock Text="{x:Bind user.name}" RelativePanel.AlignTopWithPanel="True"/>
+                                                <TextBlock Text="{x:Bind user.screen_name}" RelativePanel.AlignBottomWithPanel="True" Foreground="Gray"/>
+                                            </RelativePanel>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Height="50" RelativePanel.AlignRightWithPanel="True" Margin="0,10,10,0">
+                                            <RelativePanel Margin="0,4,10,2">
+                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE716;" RelativePanel.AlignTopWithPanel="True"/>
+                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE1E2;" RelativePanel.AlignBottomWithPanel="True"/>
+                                            </RelativePanel>
+                                            <RelativePanel>
+                                                <TextBlock Text="{x:Bind user.followers_count}" RelativePanel.AlignTopWithPanel="True"/>
+                                                <TextBlock Text="{x:Bind user.friends_count}" RelativePanel.AlignBottomWithPanel="True"/>
+                                            </RelativePanel>
+                                        </StackPanel>
+                                        <StackPanel Name="Body" RelativePanel.Below="Author" Margin="10" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+                                            <RichTextBlock Margin="0,0,10,0">
+                                                <Paragraph>
+                                                    <Run FontSize="20" Text="{x:Bind text}"/>
+                                                </Paragraph>
+                                            </RichTextBlock>
+                                            <ListView x:Name="previewList" ItemsSource="{x:Bind media}"
+                                                      IsItemClickEnabled="True"
+                                                      ItemClick="previewList_ItemClick">
+                                                <ListView.ItemTemplate>
+
+                                                    <DataTemplate x:DataType="tweetsmodel:Medium">
+                                                        <Image Source="{x:Bind thumbnail_url}" MaxHeight="120" Margin="0,10,0,0" Stretch="UniformToFill"/>
+                                                    </DataTemplate>
+
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </StackPanel>
+                                        <StackPanel RelativePanel.Below="Body" VerticalAlignment="Center" Margin="10,0,0,10" Orientation="Horizontal">
+                                            <RelativePanel>
+                                                <Grid RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="30"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18" Text="&#xE117;"/>
+                                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" Text="{x:Bind retweet_count}" FontSize="18"/>
+                                                </Grid>
+                                            </RelativePanel>
+                                            <RelativePanel Margin="20,0,0,0">
+                                                <Grid RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="30"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" VerticalAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="18" Text="&#xE006;"/>
+                                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="0,0,0,0" Text="{x:Bind favorite_count}" FontSize="18"/>
+                                                </Grid>
+                                            </RelativePanel>
+                                        </StackPanel>
+                                    </RelativePanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DataTemplate>
+                </Pivot.ItemTemplate>
+            </Pivot>
+        </RelativePanel>
     </Grid>
 </Page>

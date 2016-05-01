@@ -26,7 +26,7 @@
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
-                        <RowDefinition MinHeight="50" Height="auto"/>
+                        <RowDefinition MinHeight="70" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
                         <RowDefinition MinHeight="50" Height="auto"/>
                     </Grid.RowDefinitions>
@@ -77,6 +77,39 @@
                               IsChecked="{x:Bind ViewModel.news_content_visible, Mode=TwoWay}">
 
                     </CheckBox>
+                    <TextBlock Grid.Row="6" 
+                               MaxWidth="250"
+                               Text="Размер шрифта в статьях (и может, где-то ещё)" 
+                               TextWrapping="Wrap" 
+                               VerticalAlignment="Center" 
+                               FontSize="18"/>
+                    <RelativePanel Width="250"
+                                Grid.Row="7"
+                                Height="50"
+                                   VerticalAlignment="Bottom">
+
+                        <Button Height="50"
+                                Width="50" 
+                                Name="DecreaseFontSize" 
+                                BorderBrush="#eee" 
+                                Click="{x:Bind ViewModel.DecreaseFontSize}"
+                                BorderThickness="5" 
+                                Background="White">
+                            <TextBlock Text="&#xE108;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="22"/>
+                        </Button>
+
+                        <Grid Width="150" Name="FontSizeNumber" RelativePanel.RightOf="DecreaseFontSize" Height="50"
+                              BorderBrush="#eee" BorderThickness="0,5,0,5">
+                            <TextBlock Text="{x:Bind ViewModel.FontSize, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
+                        </Grid>
+                        
+                        <Button Height="50" Width="50" Name="IncreaseFontSize"
+                                BorderBrush="#eee" BorderThickness="5" Background="White"
+                                RelativePanel.RightOf="FontSizeNumber" Click="{x:Bind ViewModel.IncreaseFontSize}">
+                            <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="22"/>
+                        </Button>
+
+                    </RelativePanel>
                 </Grid>
             </PivotItem>
             <PivotItem Header="О приложении">

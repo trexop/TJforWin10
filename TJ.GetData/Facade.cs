@@ -61,11 +61,25 @@ namespace TJ.GetData
                 latestNews.Add(item);
             }
         }
-        public static async Task PopulateTweetsAsync(ObservableCollection<TweetsApi> tweets)
+
+        public static async Task PopulateTweetsAsync(ObservableCollection<TweetsApi> tweets, string interval)
         {
-            var tweetsWrapper = await GetTweetsWrapper();
+            var tweetsWrapper = await GetTweetsWrapper(interval);
             foreach (var tweet in tweetsWrapper)
             {
+                
+                // if (tweet.text.IndexOf("[[") > 0)
+                //{
+                  //  var te = tweet.text;
+                  //  var urls = Regex.Split(te, "[["); // Вот здесь падает
+
+                  //  var links = Regex.Split(Regex.Replace(urls[1], "]]", ""), "||"); // Убираем ненужные символы, разбиваем на массив
+                  //  tweet.short_link = links[0]; // Загоняем ссылки на своё место
+                  //  tweet.long_link = links[1];
+                  // tweet.hr_link = links[2];
+
+                  // tweet.text = urls[0];
+                // }
                 tweets.Add(tweet);
             }
         }
@@ -85,9 +99,9 @@ namespace TJ.GetData
             return result;
         }
 
-        public static async Task<List<TweetsApi>> GetTweetsWrapper()
+        public static async Task<List<TweetsApi>> GetTweetsWrapper(string interval)
         {
-            string url = String.Format("https://api.tjournal.ru/{0}/tweets", APIVersion);
+            string url = String.Format("https://api.tjournal.ru/{0}/tweets?interval={1}", APIVersion, interval);
 
             HttpClient http = new HttpClient();
             var response = await http.GetAsync(url);
@@ -122,6 +136,30 @@ namespace TJ.GetData
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
 
             var result = (ArticleContent)ser.ReadObject(ms);
+            return result;
+        }
+
+        public static async Task<ProfileApi> GetProfileJSON(int id)
+        {
+            string url = String.Format("https://api.tjournal.ru/2.2/account/info?userId={0}", id);
+
+            HttpClient http = new HttpClient();
+            var response = await http.GetAsync(url);
+            var jsonMessage = await response.Content.ReadAsStringAsync();
+
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ProfileApi));
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonMessage));
+
+            var result = (ProfileApi)ser.ReadObject(ms);
+
+            if (result.rating.karma < 0) {
+                result.carmaColor = "#DD0000"; } // Красный
+            else { result.carmaColor = "#008542"; } // Зелёный
+
+            if (result.is_club_member == true) {
+                result.isClubMemberColor = "#008542"; } // Зелёный
+            else { result.isClubMemberColor = "#DD0000"; }
+
             return result;
         }
     }
