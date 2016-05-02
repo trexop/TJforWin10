@@ -28,6 +28,25 @@ namespace TJ.ViewModels
             }
         }
 
+        public string _ImageViewSource { get; set; }
+        public string ImageViewSource
+        {
+            get
+            {
+                if (_ImageViewSource == null) {
+                    return "http://i.imgur.com/eEalWsA.jpg";
+                } else
+                {
+                    return _ImageViewSource;
+                }
+            }
+            set
+            {
+                _ImageViewSource = value;
+                this.OnPropertyChanged("ImageViewSource");
+            }
+        }
+
         public ObservableCollection<TweetsPivotItems> PivotItemsWrapper { get; set; }
 
         public ObservableCollection<TweetsApi> ThreeHoursTweets { get; set; }

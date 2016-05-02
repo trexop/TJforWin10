@@ -29,6 +29,14 @@ namespace TJ.Models
         public double ratio { get; set; }
     }
 
+    public class TweetLinks
+    {
+        public string text { get; set; }
+        public string short_link { get; set; }
+        public string long_link { get; set; }
+        public string hr_link { get; set; }
+    }
+
     public class TweetsApi
     {
         public string id { get; set; }
@@ -42,8 +50,6 @@ namespace TJ.Models
         public string security_user_hash { get; set; }
         public int created_at { get; set; }
         // custom properties
-        public string short_link { get; set; }
-        public string long_link { get; set; }
-        public string hr_link { get; set; }
+        public List<TweetLinks> inlineLinks { get; set; }
     }
 }

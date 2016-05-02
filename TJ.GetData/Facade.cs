@@ -52,6 +52,20 @@ namespace TJ.GetData
                 {
                     item.ShowNewsDetailsInSidebar = Visibility.Visible;
                 }
+                    
+                if (item.cover == null)
+                {
+                    item.cover = new Cover();
+                    item.cover.url = "x";
+                }
+                else
+                {
+                    if (item.cover.url == null)
+                    {
+                        item.cover = new Cover();
+                        item.cover.url = "x";
+                    }
+                }
 
                 string[] date = item.dateRFC.Split(' ');
                 item.dateRFC = date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4];
@@ -64,22 +78,44 @@ namespace TJ.GetData
 
         public static async Task PopulateTweetsAsync(ObservableCollection<TweetsApi> tweets, string interval)
         {
+
             var tweetsWrapper = await GetTweetsWrapper(interval);
             foreach (var tweet in tweetsWrapper)
             {
-                
-                // if (tweet.text.IndexOf("[[") > 0)
-                //{
-                  //  var te = tweet.text;
-                  //  var urls = Regex.Split(te, "[["); // Вот здесь падает
+                tweet.inlineLinks = new List<TweetLinks>();
+                string[] el_links = { "http://twitter.com", "http://twitter.com", "" };
 
-                  //  var links = Regex.Split(Regex.Replace(urls[1], "]]", ""), "||"); // Убираем ненужные символы, разбиваем на массив
-                  //  tweet.short_link = links[0]; // Загоняем ссылки на своё место
-                  //  tweet.long_link = links[1];
-                  // tweet.hr_link = links[2];
+                if (tweet.text.IndexOf("[[") > 0)
+                {
+                    var te = tweet.text;
+                    var urls = Regex.Split(te, "\\[\\[");
 
-                  // tweet.text = urls[0];
-                // }
+                    for (var i = 1; i < urls.Length ; i++)
+                    {
+                        var str = urls[i];
+                        var strings = Regex.Split(urls[i], "\\]\\]"); // Убираем ненужные символы, разбиваем на массив
+                        foreach (var el in strings)
+                        {
+                            if (el.IndexOf("||")>0)
+                            {
+                                el_links = Regex.Split(el, "\\|\\|");
+                                tweet.inlineLinks.Add(new TweetLinks { text = urls[0], short_link = el_links[0], long_link = el_links[1], hr_link = el_links[2] });
+                            }
+                            else
+                            {
+                                tweet.inlineLinks.Add(new TweetLinks { text = urls[0], short_link = "http://twitter.com", long_link = "http://twitter.com", hr_link = "" });
+                            }
+                        }
+                    }
+
+                    tweet.text = urls[0];
+                    
+                }
+                else
+                {
+                    tweet.inlineLinks.Add(new TweetLinks { text = tweet.text, short_link = "http://twitter.com", long_link = "http://twitter.com", hr_link = "" });
+                }
+
                 tweets.Add(tweet);
             }
         }

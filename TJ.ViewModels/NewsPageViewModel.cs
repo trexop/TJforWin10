@@ -127,7 +127,7 @@ namespace TJ.ViewModels
                     PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjVideoUnadmitted });
                     break;
                 case "Offtopic":
-                    await Facade.PopulateLatestNewsAsync(TjOfftop, "recent", 2, 30);
+                    await Facade.PopulateLatestNewsAsync(TjOfftop, "mainpage", 2, 30);
                     await Facade.PopulateLatestNewsAsync(TjOfftopUnadmitted, "unadmitted", 2, 30);
 
                     PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjOfftop });

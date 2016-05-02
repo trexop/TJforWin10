@@ -68,7 +68,14 @@ namespace TJournal.Pages
 
         private void previewList_ItemClick(object sender, ItemClickEventArgs e)
         {
+            var temp = (Medium)e.ClickedItem;
+            ViewModel.ImageViewSource = temp.media_url;
+            ImageViewer.Visibility = Visibility.Visible;
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ImageViewer.Visibility = Visibility.Collapsed;
         }
     }
 }

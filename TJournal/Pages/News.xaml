@@ -108,7 +108,7 @@
                                                        Visibility="{x:Bind ShowNewsDetailsInSidebar}"
                                                Margin="10,10,10,0" MaxHeight="120" 
                                                Stretch="UniformToFill" RelativePanel.RightOf="ArticleText" 
-                                               Source="{x:Bind cover.url}" />
+                                               Source="{x:Bind cover.url, Mode=TwoWay}" />
                                 </RelativePanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

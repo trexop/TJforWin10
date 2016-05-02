@@ -71,6 +71,22 @@
                                Name="DebugTextBlock" FontSize="18" Text="{x:Bind ViewModel.Title}"
                                FontWeight="SemiBold"/>
                 </StackPanel>
+                <RelativePanel Grid.Column="1">
+                    <TextBox Name="SearchBox" RelativePanel.LeftOf="SearchButton" 
+                             Width="250" FontSize="20" PlaceholderText="Поиск"
+                             RelativePanel.AlignVerticalCenterWithPanel="True"/>
+                    <Button Height="39"
+                            RelativePanel.AlignVerticalCenterWithPanel="True"
+                            Name="SearchButton"
+                            BorderBrush="Gray"
+                            BorderThickness="0,2,2,2"
+                            Margin="0,0,10,0"
+                                Width="38"  
+                                Background="#eee"
+                            RelativePanel.AlignRightWithPanel="True">
+                        <TextBlock Text="&#xE094;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="16"/>
+                    </Button>
+                </RelativePanel>
             </Grid>
         </Grid>
         <SplitView Name="SideBar" IsPaneOpen="{x:Bind ViewModel.isPaneOpen, Mode=TwoWay}" Style="{StaticResource SplitViewStyle}">
