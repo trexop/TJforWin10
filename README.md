@@ -2,7 +2,7 @@
 
 Ранняя версия, пока не пригодна для серьёзного использования. 
 
-![Скриншот](http://i.imgur.com/rpiudu3.png)
+![Скриншот](http://i.imgur.com/rpiudu3.png | width=100)
 
 ##ToDo
 
