@@ -115,7 +115,7 @@ namespace TJournal.Pages
                 RichTextBlock richtextblock = new RichTextBlock();
                 Paragraph paragraph = new Paragraph();
                 richtextblock.MaxWidth = 650;
-                richtextblock.Margin = new Thickness(0,-10,0,0);
+                richtextblock.Margin = new Thickness(0, 10, 0, 0);
                 richtextblock.TextWrapping = TextWrapping.Wrap;
                 Run run = new Run();
 
@@ -167,54 +167,158 @@ namespace TJournal.Pages
                         var textblock = block.data.text;
                         var paragraphs = Regex.Split(textblock, "<p>");
 
+                        var pattern = "<i>|<b>|<strong>|<a href=\"";
+
                         foreach (var x in paragraphs)
                         {
                             var par = Regex.Split(x, "</p>")[0];
                             Run paragraph_text = new Run();
                             Paragraph paragraph_body = new Paragraph();
-                            paragraph_body.Margin = new Thickness(20,10,20,10);
+                            paragraph_body.Margin = new Thickness(20, 10, 20, 10);
                             paragraph_text.FontSize = TextFontSize;
                             InlineUIContainer inlineUIContainer = new InlineUIContainer();
 
-                            if (par.IndexOf("<a href=\"") > 0) // Обработка инлайновых ссылок
-                            {
-                                var linkbody = Regex.Split(par, "</a>");
-                                foreach (var url in linkbody)
-                                {
-                                    if (url.IndexOf("<a href=\"") > 0)
-                                    {
-                                        var aferr = Regex.Split(url, "<a href=\"");
-                                        var linkcontainer = Regex.Split(aferr[1], "\" target=\"_blank\">");
-                                        var linksource = linkcontainer[0];
-                                        Run linktext = new Run();
-                                        Hyperlink hyperlink = new Hyperlink();
-                                        hyperlink.NavigateUri = new Uri(linksource);
-                                        Run newRun = new Run();
-                                        newRun.Text = aferr[0];
-                                        newRun.FontSize = TextFontSize;
-                                        linktext.Text = linkcontainer[1];
-                                        linktext.FontSize = TextFontSize;
-                                        linktext.Foreground = GetColorFromHexa("#1c69a9"); // Теперь они будут синенькие
+                            var testregex = Regex.Split(par, pattern);
 
-                                        paragraph_body.Inlines.Add(newRun);
-                                        paragraph_body.Inlines.Add(hyperlink);
-                                        hyperlink.Inlines.Add(linktext);
-                                    }
-                                    else
+                            foreach (var y in testregex)
+                            {
+                                if (y != "")
+                                {
+                                    var isitalic = y.IndexOf("</i>") == -1 ? 0 : 1;
+                                    var isbold = y.IndexOf("</b>") == -1 ? 0 : 1;
+                                    var isstrong = y.IndexOf("</strong>") == -1 ? 0 : 1;
+                                    var islink = y.IndexOf("</a>") == -1 ? 0 : 1;
+
+                                    var ibl = isitalic.ToString() + isbold.ToString() + isstrong.ToString() + islink.ToString();
+
+                                    switch (ibl)
                                     {
-                                        paragraph_text.Text = url;
-                                        paragraph_body.Inlines.Add(paragraph_text);
+                                        case "1000":
+                                            Debug.WriteLine("This is italic");
+
+                                            var itcaliccontainer = Regex.Split(y, "</i>");
+                                            var italicpiece = Regex.Split(y, "</i>")[0];
+                                            var afteritalic = "";
+                                            try
+                                            {
+                                                afteritalic = Regex.Split(y, "</i>")[1];
+                                            }
+                                            catch (IndexOutOfRangeException)
+                                            {
+                                                afteritalic = "";
+                                            }
+
+                                            Run italicrun = new Run();
+                                            Run afteritalicrun = new Run();
+
+                                            italicrun.Text = italicpiece;
+                                            italicrun.FontSize = TextFontSize;
+                                            italicrun.FontStyle = FontStyle.Italic;
+
+                                            afteritalicrun.Text = afteritalic;
+                                            afteritalicrun.FontSize = TextFontSize;
+
+                                            paragraph_body.Inlines.Add(italicrun);
+                                            paragraph_body.Inlines.Add(afteritalicrun);
+
+                                            if (afteritalic == "")
+                                            {
+                                                richtextblock.Blocks.Add(paragraph_body);
+                                            }
+                                            break;
+                                        case "0100":
+                                        case "0110":
+                                        case "0010":
+                                            Debug.WriteLine("This is bold");
+
+                                            var boldcontainer = Regex.Split(y, "</b>|</strong>");
+                                            var boldpiece = Regex.Split(y, "</b>|</strong>")[0];
+                                            var afterbold = "";
+                                            try
+                                            {
+                                                afterbold = Regex.Split(y, "</b>|</strong>")[1];
+                                            }
+                                            catch (IndexOutOfRangeException)
+                                            {
+                                                afterbold = "";
+                                            }
+
+                                            Run boldrun = new Run();
+                                            Run afterboldrun = new Run();
+
+                                            boldrun.Text = boldpiece;
+                                            boldrun.FontSize = TextFontSize;
+                                            boldrun.FontWeight = FontWeights.Bold;
+
+                                            afterboldrun.Text = afterbold;
+                                            afterboldrun.FontSize = TextFontSize;
+
+                                            paragraph_body.Inlines.Add(boldrun);
+                                            paragraph_body.Inlines.Add(afterboldrun);
+
+                                            if (afterbold == "")
+                                            {
+                                                richtextblock.Blocks.Add(paragraph_body);
+                                            }
+                                            break;
+                                        case "0001":
+                                            Debug.WriteLine("This is link");
+
+                                            var linkcontainer = Regex.Split(y, "\" target=\"_blank\">");
+                                            var linksource = linkcontainer[0];
+                                            var linktext = "Ссылка";
+                                            try
+                                            {
+                                                linktext = Regex.Split(linkcontainer[1], "</a>")[0];
+                                            }
+                                            catch (IndexOutOfRangeException ex)
+                                            {
+                                                linksource = "http://github.com";
+                                                linktext = "Ссылка";
+                                            }
+
+
+                                            var afterlink = "";
+
+                                            if (linkcontainer.Length > 1)
+                                            {
+                                                afterlink = Regex.Split(linkcontainer[1], "</a>")[1];
+                                            }
+                                            
+                                            Run linkrun = new Run();
+                                            Run afterlinkrun = new Run();
+
+                                            linkrun.Text = linktext;
+                                            linkrun.FontSize = TextFontSize;
+                                            linkrun.Foreground = GetColorFromHexa("#1c69a9");
+
+                                            afterlinkrun.Text = afterlink;
+                                            afterlinkrun.FontSize = TextFontSize;
+
+                                            Hyperlink hyperlink = new Hyperlink();
+                                            hyperlink.NavigateUri = new Uri(linksource);
+
+                                            paragraph_body.Inlines.Add(hyperlink);
+                                            hyperlink.Inlines.Add(linkrun);
+                                            paragraph_body.Inlines.Add(afterlinkrun);
+
+                                            if(afterlink == "")
+                                            {
+                                                richtextblock.Blocks.Add(paragraph_body);
+                                            }
+                                            break;
+                                        default:
+                                            Debug.WriteLine("This is generic text");
+
+                                            paragraph_text.Text = y;
+                                            paragraph_body.Inlines.Add(paragraph_text);
+                                            richtextblock.Blocks.Add(paragraph_body);
+                                            break;
                                     }
                                 }
-                                richtextblock.Blocks.Add(paragraph_body);
-                            }
-                            else
-                            {
-                                paragraph_text.Text = par;
-                                paragraph_body.Inlines.Add(paragraph_text);
-                                richtextblock.Blocks.Add(paragraph_body);
                             }
                         }
+
                         MainView.Children.Add(richtextblock);
                         break;
                     case "quote_styled":
@@ -259,6 +363,10 @@ namespace TJournal.Pages
                         }
                         MainView.Children.Add(stackpanel);
                         break;
+                    default:
+                        run.Text = block.ToString();
+                        paragraph.Inlines.Add(run);
+                        break;
                 }
             }
         }
@@ -274,7 +382,7 @@ namespace TJournal.Pages
             {
                 Head.Visibility = Visibility.Collapsed;
             }
-            else if (MainScrollView.VerticalOffset < 150)
+            else if (MainScrollView.VerticalOffset < 90)
             {
                 Head.Visibility = Visibility.Visible;
             }
