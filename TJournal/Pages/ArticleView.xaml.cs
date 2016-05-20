@@ -366,7 +366,7 @@ namespace TJournal.Pages
                         break;
                     case "tweet":
                         RelativePanel tweetRelativePanel = new RelativePanel();
-                        tweetRelativePanel.BorderBrush = GetColorFromHexa("#4099FF");
+                        tweetRelativePanel.BorderBrush = GetColorFromHexa("#eeeeee");
                         tweetRelativePanel.BorderThickness = new Thickness(1,1,1,1);
                         tweetRelativePanel.Margin = new Thickness(20,10,20,10);
 
@@ -410,6 +410,9 @@ namespace TJournal.Pages
                         followButton.Margin = new Thickness(0,10,10,0);
                         followButton.Background = GetColorFromHexa("#FFFFFF");
                         followButton.Foreground = GetColorFromHexa("#4099FF");
+
+                        followButton.BorderBrush = GetColorFromHexa("#4099FF");
+                        followButton.BorderThickness = new Thickness(1,1,1,1);
                         followButton.Click += new RoutedEventHandler(followButton_Click(block.data.user.screen_name));
 
                         followButton.SetValue(RelativePanel.AlignRightWithPanelProperty, true);

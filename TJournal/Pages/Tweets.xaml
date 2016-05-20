@@ -130,13 +130,20 @@
                     </DataTemplate>
                 </Pivot.ItemTemplate>
             </Pivot>
-            <RelativePanel Name="ImageViewer" RelativePanel.AlignBottomWithPanel="True"
+            <RelativePanel Name="ImageViewer" 
+                           RelativePanel.AlignBottomWithPanel="True"
                            RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
                            RelativePanel.AlignTopWithPanel="True" Visibility="Collapsed" Background="Gray">
                 <Image Source="{x:Bind ViewModel.ImageViewSource, Mode=OneWay}" RelativePanel.AlignHorizontalCenterWithPanel="True" 
                        RelativePanel.AlignVerticalCenterWithPanel="True"/>
-                <Button Height="50" RelativePanel.AlignRightWithPanel="True" Click="Button_Click" Background="Gray">
-                    <TextBlock Foreground="White" FontSize="24" Text="Закрыть"/>
+                <Button Height="50" 
+                        Width="50"
+                        RelativePanel.AlignRightWithPanel="True" 
+                        Click="Button_Click" Background="White">
+                    <TextBlock Foreground="Black" 
+                               FontSize="24"
+                               FontFamily="Segoe MDL2 Assets"
+                               Text="&#xE711;"/>
                 </Button>
             </RelativePanel>
         </RelativePanel>

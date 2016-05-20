@@ -85,7 +85,10 @@ namespace TJ.GetData
                 tweet.inlineLinks = new List<TweetLinks>();
                 string[] el_links = { "http://twitter.com", "http://twitter.com", "" };
 
-                if (tweet.text.IndexOf("[[") > 0)
+                var test1 = tweet.text.IndexOf("[[");
+                var test2 = tweet.text.IndexOf("\\[\\[");
+
+                if (tweet.text.IndexOf("[[") > -1)
                 {
                     var te = tweet.text;
                     var urls = Regex.Split(te, "\\[\\[");

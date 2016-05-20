@@ -21,7 +21,6 @@
         <Pivot Name="SortOrderPivot"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Center"
-                   Background="White"
                    ItemsSource="{x:Bind ViewModel.PivotItemsWrapper}">
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="data:PivotItems">
@@ -43,18 +42,12 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="newsmodel:NewsApi">
-                                <RelativePanel BorderBrush="LightGray"
-                                                   BorderThickness="0,1,0,0"
-                                                   Margin="10,10,10,10"
-                                                   RightTapped="RelativePanel_RightTapped">
-                                    <FlyoutBase.AttachedFlyout>
-                                        <MenuFlyout>
-                                            <MenuFlyoutItem Name="OpenInBrowser" 
-                                                                Text="Открыть в браузере"
-                                                                Click="OpenInBrowser_Click"/>
-                                        </MenuFlyout>
-                                    </FlyoutBase.AttachedFlyout>
-                                    <StackPanel Name="Author" Orientation="Horizontal">
+                                <RelativePanel Margin="10,10,10,10"
+                                               RightTapped="RelativePanel_RightTapped"
+                                               BorderBrush="LightGray"
+                                               BorderThickness="1,1,1,1">
+                                    
+                                    <StackPanel Name="Author" Orientation="Horizontal" Margin="10,10,0,0">
                                         <Image Name="Avatar" Source="{x:Bind author.profile_image_url}" Height="50" Width="50"></Image>
                                         <RelativePanel Margin="10,0,0,0">
                                             <TextBlock Text="{x:Bind author.name}" RelativePanel.AlignTopWithPanel="True"></TextBlock>
@@ -62,42 +55,64 @@
                                         </RelativePanel>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Height="50" 
-                                                            RelativePanel.AlignRightWith="Title">
+                                                Margin="0,10,10,0"
+                                                RelativePanel.AlignRightWith="Title">
                                         <RelativePanel>
                                             <TextBlock Text="{x:Bind hits}" RelativePanel.AlignTopWithPanel="True"
                                                                    RelativePanel.AlignRightWithPanel="True"/>
                                             <TextBlock Text="{x:Bind commentsCount}" RelativePanel.AlignBottomWithPanel="True"
                                                                    RelativePanel.AlignRightWithPanel="True"/>
+                                            
                                         </RelativePanel>
                                         <RelativePanel Margin="10,4,0,2">
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE890;" RelativePanel.AlignTopWithPanel="True"/>
-                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8F2;" RelativePanel.AlignBottomWithPanel="True"/>
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE890;" 
+                                                       RelativePanel.AlignTopWithPanel="True"
+                                                       RelativePanel.LeftOf="OpenInBrowser"/>
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8F2;" 
+                                                       RelativePanel.AlignBottomWithPanel="True"
+                                                       RelativePanel.LeftOf="OpenInBrowser"/>
+                                            <Button Name="OpenInBrowser" Click="OpenInBrowser_Click"
+                                                    RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                                    RelativePanel.AlignRightWithPanel="True"
+                                                    Height="50"
+                                                    Width="50"
+                                                    BorderThickness="0,0,0,0"
+                                                    Margin="10,0,0,0"
+                                                    Background="Transparent">
+                                                <TextBlock FontFamily="Segoe MDL2 Assets"
+                                                           FontSize="24"
+                                                           Text="&#xE2B4;"/>
+                                            </Button>
                                         </RelativePanel>
                                     </StackPanel>
                                     <RelativePanel Name="Title" HorizontalAlignment="Stretch"
                                                                RelativePanel.Below="Author" 
                                                                RelativePanel.AlignLeftWithPanel="True" 
-                                                               RelativePanel.AlignRightWithPanel="True">
+                                                               RelativePanel.AlignRightWithPanel="True"
+                                                   Margin="10,0,10,0">
                                         <TextBlock Margin="0,10,10,10" Grid.Column="0"
                                                                RelativePanel.LeftOf="LikesCount"
                                                                RelativePanel.AlignLeftWithPanel="True"
                                                                TextWrapping="Wrap" FontSize="18" Text="{x:Bind title}"/>
                                         <RelativePanel Margin="10,0,0,0"
                                                                    Name="LikesCount"
-                                                                   Width="55"
+                                                                   Width="50"
                                                                    RelativePanel.AlignRightWithPanel="True"
                                                                    RelativePanel.AlignBottomWithPanel="True"
                                                                    RelativePanel.AlignTopWithPanel="True">
                                             <TextBlock Text="{x:Bind likes.summ}" 
-                                                                   FontSize="24"
-                                                                   RelativePanel.AlignRightWithPanel="True"
-                                                                   RelativePanel.AlignVerticalCenterWithPanel="True" 
-                                                                   Foreground="{x:Bind likes.color}"/>
+                                                       FontSize="24"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       RelativePanel.AlignVerticalCenterWithPanel="True"
+                                                       RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                                       Foreground="{x:Bind likes.color}"/>
                                         </RelativePanel>
                                     </RelativePanel>
                                     <RichTextBlock RelativePanel.Below="Title"
                                                    Visibility="{x:Bind ShowNewsDetailsInSidebar}"
-                                                   Name="ArticleText" Grid.Column="0">
+                                                   Name="ArticleText" Grid.Column="0"
+                                                   Margin="10,0,10,0">
                                         <Paragraph>
                                             <Run Text="{x:Bind intro}"/>
                                         </Paragraph>
@@ -106,7 +121,7 @@
                                                        RelativePanel.AlignLeftWithPanel="True" 
                                                        RelativePanel.AlignRightWithPanel="True" 
                                                        Visibility="{x:Bind ShowNewsDetailsInSidebar}"
-                                               Margin="10,10,10,0" MaxHeight="120" 
+                                               Margin="10,10,10,10" MaxHeight="120" 
                                                Stretch="UniformToFill" RelativePanel.RightOf="ArticleText" 
                                                Source="{x:Bind cover.url, Mode=TwoWay}" />
                                 </RelativePanel>

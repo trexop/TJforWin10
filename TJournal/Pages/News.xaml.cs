@@ -35,6 +35,9 @@ namespace TJournal.Pages
         {
             ViewModel._Parameter = e.Parameter.ToString();
             ViewModel.SetPivotItems();
+
+            Loading.IsActive = false;
+            Loading.Visibility = Visibility.Collapsed;
         }
 
         private void RelativePanel_RightTapped(object sender, RightTappedRoutedEventArgs e)
