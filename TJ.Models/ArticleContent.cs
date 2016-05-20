@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace TJ.Models
 {
+    public class tweetUser
+    {
+        public string profile_image_url { get; set; }
+        public string profile_image_url_https { get; set; }
+        public string screen_name { get; set; }
+        public string name { get; set; }
+    }
 
     public class File
     {
@@ -32,6 +39,14 @@ namespace TJ.Models
         public int? height { get; set; }
         public string cite { get; set; }
         public string size { get; set; }
+
+        // tweets related methods
+        public bool media { get; set; }
+        public bool conversation { get; set; }
+        public tweetUser user { get; set; }
+        public long id { get; set; }
+        public string created_at { get; set; }
+        public string status_url { get; set; }
     }
 
     public class Datum

@@ -16,7 +16,7 @@ namespace TJ.GetData
     public class Facade
     {
 
-        private const string APIVersion = "2.2";
+        private const string APIVersion = "2.3";
 
         public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count)
         {

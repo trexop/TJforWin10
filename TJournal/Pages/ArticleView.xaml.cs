@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
 using TJ.GetData;
 using TJ.Models;
 using TJ.ViewModels;
@@ -88,6 +89,7 @@ namespace TJournal.Pages
             }
         }
 
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             int id = 1000;
@@ -122,8 +124,7 @@ namespace TJournal.Pages
                 switch (block.type)
                 {
                     case "image_extended":
-                        var link = block.data.file.url;
-                        var imgUri = new Uri(link);
+                        var imgUri = new Uri(block.data.file.url);
                         Image image = new Image();
 
                         image.Source = new BitmapImage(imgUri);
@@ -363,12 +364,96 @@ namespace TJournal.Pages
                         }
                         MainView.Children.Add(stackpanel);
                         break;
+                    case "tweet":
+                        RelativePanel tweetRelativePanel = new RelativePanel();
+                        tweetRelativePanel.BorderBrush = GetColorFromHexa("#4099FF");
+                        tweetRelativePanel.BorderThickness = new Thickness(1,1,1,1);
+                        tweetRelativePanel.Margin = new Thickness(20,10,20,10);
+
+                        // set author's avatar
+                        var tweetAuthorImageLink = new Uri(block.data.user.profile_image_url);
+                        Image tweetAuthorImage = new Image();
+
+                        tweetAuthorImage.Source = new BitmapImage(tweetAuthorImageLink);
+                        tweetAuthorImage.Margin = new Thickness(10,10,10,10);
+                        tweetAuthorImage.Height = 50;
+                        tweetAuthorImage.Width = 50;
+                        tweetAuthorImage.Name = "tweetAuthorAvatar";
+
+                        tweetRelativePanel.Children.Add(tweetAuthorImage);
+
+                        // set tweet author's name
+                        RelativePanel tweetAuthorNames = new RelativePanel();
+                        tweetAuthorNames.Margin = new Thickness(0,10,0,0);
+                        tweetAuthorNames.Height = 50;
+                        tweetAuthorNames.SetValue(RelativePanel.RightOfProperty, "tweetAuthorAvatar");
+
+                        TextBlock tweetAuthorDisplayName = new TextBlock();
+                        TextBlock tweetAuthorRealName = new TextBlock();
+
+                        tweetAuthorDisplayName.Text = "@" + block.data.user.screen_name;
+                        tweetAuthorDisplayName.Foreground = GetColorFromHexa("#757575");
+                        tweetAuthorDisplayName.Margin = new Thickness(10,0,0,5);
+                        tweetAuthorDisplayName.SetValue(RelativePanel.AlignBottomWithPanelProperty, true);
+
+                        tweetAuthorRealName.Text = block.data.user.name;
+                        tweetAuthorRealName.Margin = new Thickness(10,5,0,0);
+                        tweetAuthorRealName.SetValue(RelativePanel.AlignTopWithPanelProperty, true);
+
+                        tweetAuthorNames.Children.Add(tweetAuthorDisplayName);
+                        tweetAuthorNames.Children.Add(tweetAuthorRealName);
+
+                        tweetRelativePanel.Children.Add(tweetAuthorNames);
+                        // add "follow" button
+                        Button followButton = new Button();
+                        followButton.Content = "Читать";
+                        followButton.Margin = new Thickness(0,10,10,0);
+                        followButton.Background = GetColorFromHexa("#FFFFFF");
+                        followButton.Foreground = GetColorFromHexa("#4099FF");
+                        followButton.Click += new RoutedEventHandler(followButton_Click(block.data.user.screen_name));
+
+                        followButton.SetValue(RelativePanel.AlignRightWithPanelProperty, true);
+
+                        tweetRelativePanel.Children.Add(followButton);
+                        // set text of the tweet
+                        TextBlock tweetTextBlock = new TextBlock();
+                        tweetTextBlock.Text = block.data.text.ToString();
+                        tweetTextBlock.FontSize = TextFontSize;
+                        tweetTextBlock.Margin = new Thickness(10,0,10,5);
+                        tweetTextBlock.TextWrapping = TextWrapping.Wrap;
+                        tweetTextBlock.Name = "tweetText";
+                        tweetTextBlock.SetValue(RelativePanel.BelowProperty, "tweetAuthorAvatar");
+                        tweetTextBlock.SetValue(RelativePanel.AlignVerticalCenterWithPanelProperty, true);
+                        
+                        tweetRelativePanel.Children.Add(tweetTextBlock);
+                        // set date of the tweet
+                        TextBlock tweetDate = new TextBlock();
+                        tweetDate.Text = block.data.created_at;
+                        tweetDate.Foreground = GetColorFromHexa("#757575");
+                        tweetDate.Margin = new Thickness(10,0,0,10);
+                        tweetDate.SetValue(RelativePanel.BelowProperty, "tweetText");
+                        tweetRelativePanel.Children.Add(tweetDate);
+
+                        // end
+                        MainView.Children.Add(tweetRelativePanel);
+                        break;
                     default:
-                        run.Text = block.ToString();
+                        run.Text = block.data.text.ToString();
                         paragraph.Inlines.Add(run);
+                        richtextblock.Blocks.Add(paragraph);
+
+                        MainView.Children.Add(richtextblock);
                         break;
                 }
             }
+        }
+
+        private RoutedEventHandler followButton_Click(string v)
+        {
+            return new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+            {
+                Button_Click(v);
+            });
         }
 
         private void Author_Tapped(object sender, TappedRoutedEventArgs e)
@@ -386,6 +471,12 @@ namespace TJournal.Pages
             {
                 Head.Visibility = Visibility.Visible;
             }
+        }
+
+        private async void Button_Click(string id)
+        {
+            var link = new Uri("https://twitter.com/intent/follow?screen_name=" + id);
+            await Windows.System.Launcher.LaunchUriAsync(link);
         }
     }
 }
