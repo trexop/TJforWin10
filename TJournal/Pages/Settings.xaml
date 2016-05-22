@@ -3,7 +3,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TJournal.Pages"
-    xmlns:viewModels="using:TJ.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:TJ.ViewModels"
@@ -103,7 +102,8 @@
                             <TextBlock Text="{x:Bind ViewModel.FontSize, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22"/>
                         </Grid>
                         
-                        <Button Height="50" Width="50" Name="IncreaseFontSize"
+                        <Button Height="50" Width="50" 
+                                Name="IncreaseFontSize"
                                 BorderBrush="#eee" BorderThickness="5" Background="White"
                                 RelativePanel.RightOf="FontSizeNumber" Click="{x:Bind ViewModel.IncreaseFontSize}">
                             <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="22"/>
@@ -111,6 +111,40 @@
 
                     </RelativePanel>
                 </Grid>
+            </PivotItem>
+            <PivotItem Header="Чёрный список">
+                <StackPanel>
+                    <ListView Name="UsersBlackList"
+                              ItemsSource="{x:Bind ViewModel.NewsBlackList}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="data:BlackListedAccount">
+                                <StackPanel Orientation="Horizontal">
+                                    <Grid>
+                                        <TextBlock Width="350" Text="{x:Bind id}"
+                                           FontSize="25" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Height="50" 
+                                 BorderBrush="LightGray"
+                                 BorderThickness="2"
+                             Width="350"
+                             FontSize="26"
+                             PlaceholderText="ID пользователя"
+                                 Text="{x:Bind ViewModel.UserID, Mode=TwoWay}"
+                             HorizontalAlignment="Left"/>
+                        <Button Height="50" Width="50" 
+                                Margin="10,0,0,0"
+                                Name="AddUserToBlacklist"
+                                BorderBrush="#eee" BorderThickness="2" Background="White"
+                                Click="{x:Bind ViewModel.AddUserToBlacklist}">
+                            <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="22"/>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
             </PivotItem>
             <PivotItem Header="О приложении">
                 <RelativePanel Margin="0,20,0,0">

@@ -32,6 +32,7 @@ namespace TJournal.Pages
             this.InitializeComponent();
             ViewModel = new SettingsViewModel();
             ViewModel.PopulateComboboxItems();
+            ViewModel.InitializeBlackList();
         }
         public SettingsViewModel ViewModel { get; set; }
     }

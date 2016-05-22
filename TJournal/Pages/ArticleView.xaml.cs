@@ -272,7 +272,7 @@ namespace TJournal.Pages
                                             {
                                                 linktext = Regex.Split(linkcontainer[1], "</a>")[0];
                                             }
-                                            catch (IndexOutOfRangeException ex)
+                                            catch (IndexOutOfRangeException)
                                             {
                                                 linksource = "http://github.com";
                                                 linktext = "Ссылка";
@@ -404,6 +404,21 @@ namespace TJournal.Pages
                         tweetAuthorNames.Children.Add(tweetAuthorRealName);
 
                         tweetRelativePanel.Children.Add(tweetAuthorNames);
+                        // add open in browser button
+                        Button goToTweet = new Button();
+                        goToTweet.Content = "К твиту";
+                        goToTweet.Name = "goToTweet";
+                        goToTweet.Margin = new Thickness(0, 10, 10, 0);
+                        goToTweet.Background = GetColorFromHexa("#FFFFFF");
+                        goToTweet.Foreground = GetColorFromHexa("#757575");
+
+                        goToTweet.BorderBrush = GetColorFromHexa("#757575");
+                        goToTweet.BorderThickness = new Thickness(1, 1, 1, 1);
+
+                        goToTweet.SetValue(RelativePanel.AlignRightWithPanelProperty, true);
+                        goToTweet.Click += new RoutedEventHandler(goToTweet_Click(block.data.status_url));
+
+                        tweetRelativePanel.Children.Add(goToTweet);
                         // add "follow" button
                         Button followButton = new Button();
                         followButton.Content = "Читать";
@@ -415,7 +430,7 @@ namespace TJournal.Pages
                         followButton.BorderThickness = new Thickness(1,1,1,1);
                         followButton.Click += new RoutedEventHandler(followButton_Click(block.data.user.screen_name));
 
-                        followButton.SetValue(RelativePanel.AlignRightWithPanelProperty, true);
+                        followButton.SetValue(RelativePanel.LeftOfProperty, "goToTweet");
 
                         tweetRelativePanel.Children.Add(followButton);
                         // set text of the tweet
@@ -440,6 +455,16 @@ namespace TJournal.Pages
                         // end
                         MainView.Children.Add(tweetRelativePanel);
                         break;
+                    case "rawhtml":
+                        string rawhtml = block.data.raw;
+                        var rawhtmlheight = Regex.Split(Regex.Split(block.data.raw, "height=\"")[1], "\" ")[0];
+                        WebView rawwebview = new WebView();
+                        rawwebview.MaxWidth = 650;
+                        rawwebview.Height = int.Parse(rawhtmlheight) + 20;
+                        rawwebview.NavigateToString(rawhtml);
+                        
+                        MainView.Children.Add(rawwebview);
+                        break;
                     default:
                         run.Text = block.data.text.ToString();
                         paragraph.Inlines.Add(run);
@@ -456,6 +481,14 @@ namespace TJournal.Pages
             return new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
             {
                 Button_Click(v);
+            });
+        }
+
+        private RoutedEventHandler goToTweet_Click(string v)
+        {
+            return new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+            {
+                goToTweet(v);
             });
         }
 
@@ -479,6 +512,12 @@ namespace TJournal.Pages
         private async void Button_Click(string id)
         {
             var link = new Uri("https://twitter.com/intent/follow?screen_name=" + id);
+            await Windows.System.Launcher.LaunchUriAsync(link);
+        }
+
+        private async void goToTweet(string id)
+        {
+            var link = new Uri(id);
             await Windows.System.Launcher.LaunchUriAsync(link);
         }
     }

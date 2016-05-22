@@ -21,6 +21,7 @@
         <Pivot Name="SortOrderPivot"
                    VerticalAlignment="Stretch"
                    HorizontalAlignment="Center"
+               Background="White"
                    ItemsSource="{x:Bind ViewModel.PivotItemsWrapper}">
             <Pivot.HeaderTemplate>
                 <DataTemplate x:DataType="data:PivotItems">
@@ -32,6 +33,7 @@
                     <ListView Name="MasterListView"
                               ScrollViewer.VerticalScrollBarVisibility="Visible"
                               ItemsSource="{x:Bind Content}"
+                              Background="White"
                               IsItemClickEnabled="True"
                               ItemClick="MasterListView_ItemClick">
                         <ListView.ItemContainerStyle>

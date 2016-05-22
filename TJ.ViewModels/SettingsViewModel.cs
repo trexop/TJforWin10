@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -16,6 +18,11 @@ namespace TJ.ViewModels
         public string Name { get; set; }
         public string Content { get; set; }
         public bool IsSelected { get; set; } 
+    }
+
+    public class BlackListedAccount
+    {
+        public int id { get; set; }
     }
 
     public class SettingsViewModel : INotifyPropertyChanged
@@ -165,8 +172,7 @@ namespace TJ.ViewModels
                 DefaultPageValue = localSettings.Values["DefaultPage"].ToString();
             }
 
-            ComboBoxItems.Add(new ComboBoxItem { Name = "News", Content = "Новости/Главное"});
-            ComboBoxItems.Add(new ComboBoxItem { Name = "Editorial", Content = "Новости/Редакция" });
+            ComboBoxItems.Add(new ComboBoxItem { Name = "News", Content = "Главное"});
             ComboBoxItems.Add(new ComboBoxItem { Name = "Articles", Content = "Статьи" });
             ComboBoxItems.Add(new ComboBoxItem { Name = "Video", Content = "Видео" });
             ComboBoxItems.Add(new ComboBoxItem { Name = "Offtopic", Content = "Оффтоп" });
@@ -186,6 +192,32 @@ namespace TJ.ViewModels
             var combo = (ComboBox)sender;
             var item = (ComboBoxItem)combo.SelectedItem;
             localSettings.Values["DefaultPage"] = item.Name.ToString();
+        }
+
+        private string _UserId { get; set; }
+        public string UserID
+        {
+            get
+            {
+                return _UserId;
+            }
+            set
+            {
+                _UserId = value;
+                this.OnPropertyChanged("UserID");
+            }
+        }
+
+        public ObservableCollection<BlackListedAccount> NewsBlackList { get; set; }
+
+        public void InitializeBlackList()
+        {
+            NewsBlackList = new ObservableCollection<BlackListedAccount>();
+        }
+        public void AddUserToBlacklist()
+        {
+            NewsBlackList.Add(new BlackListedAccount { id = int.Parse(UserID) });
+            UserID = "";
         }
     }
 }

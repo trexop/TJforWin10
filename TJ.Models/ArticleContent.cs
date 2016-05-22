@@ -47,6 +47,8 @@ namespace TJ.Models
         public long id { get; set; }
         public string created_at { get; set; }
         public string status_url { get; set; }
+        // raw data
+        public string raw { get; set; }
     }
 
     public class Datum
