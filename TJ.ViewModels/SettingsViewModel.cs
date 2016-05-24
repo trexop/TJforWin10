@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using TJ.GetData;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -18,11 +23,6 @@ namespace TJ.ViewModels
         public string Name { get; set; }
         public string Content { get; set; }
         public bool IsSelected { get; set; } 
-    }
-
-    public class BlackListedAccount
-    {
-        public int id { get; set; }
     }
 
     public class SettingsViewModel : INotifyPropertyChanged
@@ -51,7 +51,7 @@ namespace TJ.ViewModels
             await Windows.System.Launcher.LaunchUriAsync(link);
         }
 
-        public double _OnetimeLoadedItems { get; set; }
+        private double _OnetimeLoadedItems { get; set; }
         public double OnetimeLoadedItems
         {
             get
@@ -66,10 +66,9 @@ namespace TJ.ViewModels
             set
             {
                 _OnetimeLoadedItems = value;
-                this.OnPropertyChanged("OnetimeLoadedItems");
+                localSettings.Values["NumberOfOnetimeLoadedItems"] = value;
             }
         }
-
 
         public Boolean? _news_content_visible { get; set; } // Состояние галочки "показывать содержимое новости"
         public Boolean? news_content_visible
@@ -208,16 +207,39 @@ namespace TJ.ViewModels
             }
         }
 
-        public ObservableCollection<BlackListedAccount> NewsBlackList { get; set; }
+        public ObservableCollection<GetData.BlackListedAccount> NewsBlackList { get; set; }
 
-        public void InitializeBlackList()
+        public async void SaveBlackListCollection(object collection)
         {
-            NewsBlackList = new ObservableCollection<BlackListedAccount>();
+            var folder = ApplicationData.Current.LocalFolder;
+            var file = await folder.CreateFileAsync("blacklist.json", CreationCollisionOption.ReplaceExisting);
+
+            using (var stream = await file.OpenStreamForWriteAsync())
+            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            {
+                string json = JsonConvert.SerializeObject(collection);
+                await writer.WriteAsync(json);
+            }
         }
+
         public void AddUserToBlacklist()
         {
             NewsBlackList.Add(new BlackListedAccount { id = int.Parse(UserID) });
+            SaveBlackListCollection(NewsBlackList);
             UserID = "";
+        }
+
+        public void RemoveUserFromBlacklist(object sender, ItemClickEventArgs e)
+        {
+            var SelectedItem = (BlackListedAccount)e.ClickedItem;
+            try
+            {
+                NewsBlackList.Remove(NewsBlackList.Where(i => i.id == SelectedItem.id).Single());
+            } catch (InvalidOperationException)
+            {
+                NewsBlackList.Clear();
+            }
+            SaveBlackListCollection(NewsBlackList);
         }
     }
 }

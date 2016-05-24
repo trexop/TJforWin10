@@ -49,6 +49,7 @@ namespace TJ.Models
         public string status_url { get; set; }
         // raw data
         public string raw { get; set; }
+        public string url { get; set; }
     }
 
     public class Datum

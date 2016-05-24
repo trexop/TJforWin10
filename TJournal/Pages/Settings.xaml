@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:TJ.ViewModels"
+    xmlns:getData="using:TJ.GetData"
     DataContext="{Binding Source=ViewModelLocator, Path=Settings}"
     mc:Ignorable="d">
 
@@ -54,12 +55,13 @@
                                Text="Загружать записей за раз"/>
 
                     <Slider Grid.Row="3" 
+                            Name="Shaitan"
                             Width="200" 
                             Minimum="1" 
                             Maximum="50" 
                             Height="38" 
                             VerticalAlignment="Center" 
-                            HorizontalAlignment="Left" 
+                            HorizontalAlignment="Left"
                             Value="{x:Bind ViewModel.OnetimeLoadedItems, Mode=TwoWay}"/>
 
                     <TextBlock VerticalAlignment="Center"
@@ -115,19 +117,33 @@
             <PivotItem Header="Чёрный список">
                 <StackPanel>
                     <ListView Name="UsersBlackList"
+                              Width="450"
+                              HorizontalAlignment="Left"
+                              IsItemClickEnabled="True"
+                              ItemClick="{x:Bind ViewModel.RemoveUserFromBlacklist}"
                               ItemsSource="{x:Bind ViewModel.NewsBlackList}">
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="data:BlackListedAccount">
-                                <StackPanel Orientation="Horizontal">
+                            <DataTemplate x:DataType="getData:BlackListedAccount">
+                                <StackPanel Orientation="Horizontal" Margin="0,10" Width="410">
                                     <Grid>
-                                        <TextBlock Width="350" Text="{x:Bind id}"
-                                           FontSize="25" VerticalAlignment="Center"/>
+                                        <TextBlock Width="338" Text="{x:Bind id, Mode=TwoWay}"
+                                           FontSize="22" VerticalAlignment="Center"/>
+                                    </Grid>
+                                    <Grid Height="50" Width="50" 
+                                Margin="10,0,0,0"
+                                Name="RemoveUserFromBlacklist"
+                                BorderBrush="#eee" BorderThickness="2" Background="White">
+                                        <TextBlock Text="&#xE10A;" 
+                                       FontFamily="Segoe MDL2 Assets"
+                                                   HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" 
+                                       FontSize="22"/>
                                     </Grid>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                         <TextBox Height="50" 
                                  BorderBrush="LightGray"
                                  BorderThickness="2"
@@ -141,7 +157,11 @@
                                 Name="AddUserToBlacklist"
                                 BorderBrush="#eee" BorderThickness="2" Background="White"
                                 Click="{x:Bind ViewModel.AddUserToBlacklist}">
-                            <TextBlock Text="&#xE109;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="22"/>
+                            <TextBlock Text="&#xE109;"
+                                       Foreground="#757575"
+                                       FontFamily="Segoe MDL2 Assets" 
+                                       VerticalAlignment="Center" 
+                                       FontSize="22"/>
                         </Button>
                     </StackPanel>
                 </StackPanel>

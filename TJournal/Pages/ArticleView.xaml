@@ -169,5 +169,23 @@
                 <StackPanel Height="20" MaxWidth="650" Background="White"/>
             </StackPanel>
         </ScrollViewer>
+        <RelativePanel Name="ImageViewer" 
+                           RelativePanel.AlignBottomWithPanel="True"
+                           RelativePanel.AlignLeftWithPanel="True" 
+                           RelativePanel.AlignRightWithPanel="True"
+                           RelativePanel.AlignTopWithPanel="True" 
+                           Visibility="Collapsed" Background="Gray">
+            <Image Source="{x:Bind ImageViewSource, Mode=OneWay}" RelativePanel.AlignHorizontalCenterWithPanel="True" 
+                       RelativePanel.AlignVerticalCenterWithPanel="True"/>
+            <Button Height="50" 
+                        Width="50"
+                        RelativePanel.AlignRightWithPanel="True" 
+                        Click="Close_ImageViewer" Background="White">
+                <TextBlock Foreground="Black" 
+                               FontSize="24"
+                               FontFamily="Segoe MDL2 Assets"
+                               Text="&#xE711;"/>
+            </Button>
+        </RelativePanel>
     </RelativePanel>
 </Page>

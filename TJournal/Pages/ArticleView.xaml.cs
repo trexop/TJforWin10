@@ -75,6 +75,31 @@ namespace TJournal.Pages
             }
         }
 
+        private string _ImageViewSource { get; set; }
+        public string ImageViewSource
+        {
+            get
+            {
+                if (_ImageViewSource == null)
+                {
+                    return "http://i.imgur.com/eEalWsA.jpg";
+                }
+                else if (_ImageViewSource == "")
+                {
+                    return "x";
+                }
+                else
+                {
+                    return _ImageViewSource;
+                }
+            }
+            set
+            {
+                _ImageViewSource = value;
+                this.OnPropertyChanged("ImageViewSource");
+            }
+        }
+
         private Visibility _SponsoredBadgeVisibility { get; set; }
         public Visibility SponsoredBadgeVisibility
         {
@@ -165,6 +190,7 @@ namespace TJournal.Pages
                         MainView.Children.Add(webview);
                         break;
                     case "text":
+                    case "text_limited":
                         var textblock = block.data.text;
                         var paragraphs = Regex.Split(textblock, "<p>");
 
@@ -444,6 +470,8 @@ namespace TJournal.Pages
                         tweetTextBlock.SetValue(RelativePanel.AlignVerticalCenterWithPanelProperty, true);
                         
                         tweetRelativePanel.Children.Add(tweetTextBlock);
+                        // set images of the tweet
+                        var listOfImages = block.data.media;
                         // set date of the tweet
                         TextBlock tweetDate = new TextBlock();
                         tweetDate.Text = block.data.created_at;
@@ -464,6 +492,13 @@ namespace TJournal.Pages
                         rawwebview.NavigateToString(rawhtml);
                         
                         MainView.Children.Add(rawwebview);
+                        break;
+                    case "link_embed_undeletable":
+                        run.Text = block.data.url.ToString();
+                        paragraph.Inlines.Add(run);
+                        richtextblock.Blocks.Add(paragraph);
+
+                        MainView.Children.Add(richtextblock);
                         break;
                     default:
                         run.Text = block.data.text.ToString();
@@ -489,6 +524,14 @@ namespace TJournal.Pages
             return new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
             {
                 goToTweet(v);
+            });
+        }
+
+        private RoutedEventHandler OpenImageFullscreen(string v)
+        {
+            return new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+            {
+                _OpenImageFullscreen(v);
             });
         }
 
@@ -519,6 +562,17 @@ namespace TJournal.Pages
         {
             var link = new Uri(id);
             await Windows.System.Launcher.LaunchUriAsync(link);
+        }
+
+        private void _OpenImageFullscreen(string link)
+        {
+            ImageViewer.Visibility = Visibility.Visible;
+            ImageViewSource = link;
+        }
+
+        private void Close_ImageViewer(object sender, RoutedEventArgs e)
+        {
+            ImageViewer.Visibility = Visibility.Collapsed;
         }
     }
 }

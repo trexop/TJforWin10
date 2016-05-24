@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -9,14 +11,20 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TJ.Models;
+using Windows.Storage;
 using Windows.UI.Xaml;
 
 namespace TJ.GetData
 {
+    public class BlackListedAccount
+    {
+        public int id { get; set; }
+    }
+
     public class Facade
     {
-
         private const string APIVersion = "2.3";
+        public static ObservableCollection<BlackListedAccount> NewsBlackList { get; set; }
 
         public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count)
         {
@@ -27,31 +35,20 @@ namespace TJ.GetData
             foreach (var item in newsWrapper)
             {
                 if (item.likes.summ > 0) // Настраиваем цвет рейтинга
-                {
-                    item.likes.color = "#008542";
-                }
+                { item.likes.color = "#008542"; }
                 else if (item.likes.summ < 0)
-                {
-                    item.likes.color = "#DD0000";
-                }
+                { item.likes.color = "#DD0000"; }
                 else
-                {
-                    item.likes.color = "#eee";
-                }
+                { item.likes.color = "#eee"; }
 
                 bool temp = false;
+
                 if (localSettings.Values["NewsContentVisible"] != null)
-                {
-                    Boolean.TryParse(localSettings.Values["NewsContentVisible"].ToString(), out temp);
-                }
+                { Boolean.TryParse(localSettings.Values["NewsContentVisible"].ToString(), out temp); }
                 if (temp == true)
-                {
-                    item.ShowNewsDetailsInSidebar = Visibility.Collapsed;
-                }
+                { item.ShowNewsDetailsInSidebar = Visibility.Collapsed; }
                 else
-                {
-                    item.ShowNewsDetailsInSidebar = Visibility.Visible;
-                }
+                { item.ShowNewsDetailsInSidebar = Visibility.Visible; }
                     
                 if (item.cover == null)
                 {
@@ -72,7 +69,14 @@ namespace TJ.GetData
                 string pattern = "<[^>]*>"; // режем html-теги
                 string content = item.intro;
                 item.intro = Regex.Replace(content, pattern, "");
-                latestNews.Add(item);
+
+                if (NewsBlackList.Any(p => p.id == item.author.id))
+                {
+                    Debug.WriteLine("В чёрном списке");
+                } else
+                {
+                    latestNews.Add(item);
+                }
             }
         }
 
@@ -200,6 +204,45 @@ namespace TJ.GetData
             else { result.isClubMemberColor = "#DD0000"; }
 
             return result;
+        }
+
+        public static async Task<ObservableCollection<BlackListedAccount>> GetBlackListCollection()
+        {
+            try
+            {
+                var folder = ApplicationData.Current.LocalFolder;
+                var file = await folder.GetFileAsync("blacklist.json");
+                using (var stream = await file.OpenStreamForReadAsync())
+                using (var reader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    string json = await reader.ReadToEndAsync();
+                    if (json != "")
+                    {
+                        var collection = JsonConvert.DeserializeObject<ObservableCollection<BlackListedAccount>>(json);
+                        return collection;
+                    }
+                    else
+                    {
+                        var collection = new ObservableCollection<BlackListedAccount>();
+                        return collection;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                var collection = new ObservableCollection<BlackListedAccount>();
+                return collection;
+            }
+        }
+
+        public static async void PopulateBlackListedAccounts(ObservableCollection<BlackListedAccount> coll)
+        {
+            var collection = await GetBlackListCollection();
+            foreach (var item in collection)
+            {
+                coll.Add(item);
+            }
         }
     }
 }

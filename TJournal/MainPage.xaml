@@ -134,6 +134,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1">
                         <RadioButton Style="{StaticResource SideBarRadioButton}" Name="LogIn" Tag="&#xE1F6;"
+                                     Checked="RadioButton_Checked"
                                      GroupName="Navigation">
                             <Grid Height="38">
                                 <TextBlock Text="Авторизация" Style="{StaticResource SideBarTextStyle}"/>

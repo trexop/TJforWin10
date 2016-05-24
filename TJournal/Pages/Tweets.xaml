@@ -132,8 +132,10 @@
             </Pivot>
             <RelativePanel Name="ImageViewer" 
                            RelativePanel.AlignBottomWithPanel="True"
-                           RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True"
-                           RelativePanel.AlignTopWithPanel="True" Visibility="Collapsed" Background="Gray">
+                           RelativePanel.AlignLeftWithPanel="True" 
+                           RelativePanel.AlignRightWithPanel="True"
+                           RelativePanel.AlignTopWithPanel="True" 
+                           Visibility="Collapsed" Background="Gray">
                 <Image Source="{x:Bind ViewModel.ImageViewSource, Mode=OneWay}" RelativePanel.AlignHorizontalCenterWithPanel="True" 
                        RelativePanel.AlignVerticalCenterWithPanel="True"/>
                 <Button Height="50" 

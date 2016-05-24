@@ -23,10 +23,12 @@ namespace TJournal.Pages
 
     public sealed partial class News : Page
     {
+        Windows.Storage.ApplicationDataContainer localSettings =
+                Windows.Storage.ApplicationData.Current.LocalSettings;
+
         public News()
         {
             this.InitializeComponent();
-
             ViewModel = new NewsPageViewModel();
         }
         public NewsPageViewModel ViewModel { get; set; }
@@ -34,6 +36,7 @@ namespace TJournal.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel._Parameter = e.Parameter.ToString();
+
             ViewModel.SetPivotItems();
         }
 

@@ -38,14 +38,7 @@ namespace TJournal
 
             if (value != null)
             {
-                if (value.ToString() == "Editorial")
-                {
-                    GeneralFrame.Navigate(typeof(News), "News");
-                }
-                else
-                {
-                    GeneralFrame.Navigate(typeof(News), value.ToString());
-                }
+                GeneralFrame.Navigate(typeof(News), value.ToString());
             }
             else
             {
@@ -85,6 +78,10 @@ namespace TJournal
                 case "Settings":
                     GeneralFrame.Navigate(typeof(Settings));
                     DebugTextBlock.Text = "Параметры";
+                    break;
+                case "LogIn":
+                    GeneralFrame.Navigate(typeof(Authorization));
+                    DebugTextBlock.Text = "Мне тоже очень жаль";
                     break;
             }
             SideBar.IsPaneOpen = false;
