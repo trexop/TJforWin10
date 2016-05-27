@@ -26,9 +26,9 @@ namespace TJ.GetData
         private const string APIVersion = "2.3";
         public static ObservableCollection<BlackListedAccount> NewsBlackList { get; set; }
 
-        public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count)
+        public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count, int offset)
         {
-            var newsWrapper = await GetNewsDataWrapperAsync(sorting, Type, Count);
+            var newsWrapper = await GetNewsDataWrapperAsync(sorting, Type, Count, offset);
             Windows.Storage.ApplicationDataContainer localSettings =
                 Windows.Storage.ApplicationData.Current.LocalSettings;
 
@@ -49,7 +49,10 @@ namespace TJ.GetData
                 { item.ShowNewsDetailsInSidebar = Visibility.Collapsed; }
                 else
                 { item.ShowNewsDetailsInSidebar = Visibility.Visible; }
-                    
+
+                item.ShowGenericInfo = Visibility.Visible;
+                item.IsThisANextButton = Visibility.Collapsed;
+                   
                 if (item.cover == null)
                 {
                     item.cover = new Cover();
@@ -78,6 +81,14 @@ namespace TJ.GetData
                     latestNews.Add(item);
                 }
             }
+
+            var NextButton = new NewsApi();
+            var n = 30; // количество загружаемых новостей
+            int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n);
+            NextButton.IsThisANextButton = Visibility.Visible;
+            NextButton.ShowGenericInfo = Visibility.Collapsed;
+            NextButton.intro = String.Format("Загрузить следующие {0} записей", n);
+            latestNews.Add(NextButton);
         }
 
         public static async Task PopulateTweetsAsync(ObservableCollection<TweetsApi> tweets, string interval)
@@ -127,9 +138,11 @@ namespace TJ.GetData
             }
         }
 
-        private static async Task<List<NewsApi>> GetNewsDataWrapperAsync(string sortMode, int Type, int Count)
+        private static async Task<List<NewsApi>> GetNewsDataWrapperAsync(string sortMode, int Type, int Count, int offset)
         {
-            string url = String.Format("https://api.tjournal.ru/{0}/club?sortMode={1}&type={2}&count={3}", APIVersion, sortMode, Type.ToString(), Count.ToString());
+            string url =
+                String.Format("https://api.tjournal.ru/{0}/club?sortMode={1}&type={2}&count={3}&offset={4}",
+                APIVersion, sortMode, Type.ToString(), Count.ToString(), offset.ToString());
 
             HttpClient http = new HttpClient();
             var response = await http.GetAsync(url);

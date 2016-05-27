@@ -95,5 +95,7 @@ namespace TJ.Models
         public int editedByEditor { get; set; }
         // custom properties
         public Visibility ShowNewsDetailsInSidebar { get; set; }
+        public Visibility IsThisANextButton { get; set; }
+        public Visibility ShowGenericInfo { get; set; }
     }
 }

@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using TJ.Models;
+using Windows.UI;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,15 +30,18 @@ namespace TJournal.Pages
         public News()
         {
             this.InitializeComponent();
+            Application.Current.Resources["SystemControlHighlightListAccentLowBrush"] = new SolidColorBrush(Colors.Transparent); // Убираем ебучую тематическую подсветку с нажатой кнопки
+            Application.Current.Resources["SystemControlHighlightListAccentMediumBrush"] = new SolidColorBrush(Colors.Transparent);
             ViewModel = new NewsPageViewModel();
         }
         public NewsPageViewModel ViewModel { get; set; }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            ViewModel._Parameter = e.Parameter.ToString();
-
-            ViewModel.SetPivotItems();
+            ViewModel.Offset = 0;
+            ViewModel.Parameter = e.Parameter.ToString();
+            ViewModel.CreateCollections();
+            ViewModel.SetPivotItems(ViewModel.Parameter, ViewModel.Offset);
         }
 
         private void RelativePanel_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -62,12 +66,20 @@ namespace TJournal.Pages
 
         private void MasterListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Debug.WriteLine("Fired!");
-
             var selectedItem = (NewsApi)e.ClickedItem;
             var ArticleId = selectedItem.id;
 
-            Frame.Navigate(typeof(ArticleView), ArticleId);
+            if (selectedItem.IsThisANextButton == Visibility.Collapsed)
+            {
+                Frame.Navigate(typeof(ArticleView), ArticleId);
+            } else
+            {
+                Debug.WriteLine("Хуй");
+                var n = 30; // количество загружаемых новостей
+                int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n);
+                ViewModel.Offset += n;
+                ViewModel.SetPivotItems(ViewModel.Parameter, ViewModel.Offset);
+            }
         }
     }
 }

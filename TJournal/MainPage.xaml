@@ -123,8 +123,8 @@
                                     <TextBlock Text="Оффтоп" Style="{StaticResource SideBarTextStyle}"/>
                                 </Grid>
                             </RadioButton>
-                            <RadioButton Style="{StaticResource SideBarRadioButton}" Name="Tweets" 
-                                         GroupName="Navigation" Tag="&#xE128;" Checked="RadioButton_Checked">
+                            <RadioButton Style="{StaticResource SideBarTweetsButton}" Name="Tweets" 
+                                         GroupName="Navigation" Checked="RadioButton_Checked">
                                 <Grid Height="38">
                                     <TextBlock Text="Твиты" Style="{StaticResource SideBarTextStyle}"/>
                                 </Grid>
