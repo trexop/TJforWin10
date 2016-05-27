@@ -83,8 +83,8 @@ namespace TJ.GetData
             }
 
             var NextButton = new NewsApi();
-            var n = 30; // количество загружаемых новостей
-            int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n);
+            int n = 30;
+            int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n); // количество загружаемых новостей
             NextButton.IsThisANextButton = Visibility.Visible;
             NextButton.ShowGenericInfo = Visibility.Collapsed;
             NextButton.intro = String.Format("Загрузить следующие {0} записей", n);

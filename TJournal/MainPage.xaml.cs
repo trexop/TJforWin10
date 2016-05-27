@@ -35,6 +35,14 @@ namespace TJournal
                 Windows.Storage.ApplicationData.Current.LocalSettings;
 
             Object value = localSettings.Values["DefaultPage"]; // Получить настройки стартовой страницы и навигировать
+            try
+            {
+                int n;
+                int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n);
+            } catch (Exception)
+            {
+                localSettings.Values["NumberOfOnetimeLoadedItems"] = 30; // Установить количество записей по-умолчанию, если неопределено
+            }
 
             if (value != null)
             {

@@ -36,6 +36,7 @@ namespace TJ.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
         Windows.Storage.ApplicationDataContainer localSettings =
                 Windows.Storage.ApplicationData.Current.LocalSettings;
 
@@ -112,11 +113,12 @@ namespace TJ.ViewModels
         public async void SetPivotItems(string page, int offset)
         {
             PivotItemsWrapper = new ObservableCollection<PivotItems>();
-            var n = 30; // количество загружаемых новостей
-            int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n);
+            int n = 30;
+            int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n); // количество загружаемых новостей
             var NavigatedPage = page;
             Facade.NewsBlackList = new ObservableCollection<GetData.BlackListedAccount>();
             Facade.PopulateBlackListedAccounts(Facade.NewsBlackList);
+
             switch (NavigatedPage) // Настраиваем вкладки для разных страниц
             {
                 case "News":

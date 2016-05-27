@@ -35,9 +35,9 @@ namespace TJ.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
         Windows.Storage.ApplicationDataContainer localSettings =
                 Windows.Storage.ApplicationData.Current.LocalSettings;
-
 
         public async void Button_Click(object sender, RoutedEventArgs e)
         {
