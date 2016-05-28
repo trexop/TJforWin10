@@ -83,7 +83,8 @@
                             Margin="0,0,10,0"
                                 Width="38"  
                                 Background="#eee"
-                            RelativePanel.AlignRightWithPanel="True">
+                            RelativePanel.AlignRightWithPanel="True"
+                            Click="SearchButton_Click">
                         <TextBlock Text="&#xE094;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" FontSize="16"/>
                     </Button>
                 </RelativePanel>

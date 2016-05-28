@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TJ.ViewModels;
+using TJ.Models;
 using TJournal.Pages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -30,6 +31,7 @@ namespace TJournal
         public MainPage()
         {
             this.InitializeComponent();
+            Helpers.Payload payload = new Helpers.Payload();
             ViewModel = new MainPageViewModel();
             Windows.Storage.ApplicationDataContainer localSettings =
                 Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -46,11 +48,13 @@ namespace TJournal
 
             if (value != null)
             {
-                GeneralFrame.Navigate(typeof(News), value.ToString());
+                payload.parameter = value.ToString();
+                GeneralFrame.Navigate(typeof(News), payload);
             }
             else
             {
-                GeneralFrame.Navigate(typeof(News), "News");
+                payload.parameter = "News";
+                GeneralFrame.Navigate(typeof(News), payload);
             }
 
         }
@@ -59,24 +63,29 @@ namespace TJournal
         public void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             RadioButton rb = sender as RadioButton;
+            Helpers.Payload payload = new Helpers.Payload();
 
             string Page = rb.Name.ToString();
             switch (Page)
             {
                 case "News":
-                    GeneralFrame.Navigate(typeof(News), "News");
+                    payload.parameter = "News";
+                    GeneralFrame.Navigate(typeof(News), payload);
                     DebugTextBlock.Text = "Новости";
                     break;
                 case "Articles":
-                    GeneralFrame.Navigate(typeof(News), "Articles");
+                    payload.parameter = "Articles";
+                    GeneralFrame.Navigate(typeof(News), payload);
                     DebugTextBlock.Text = "Статьи";
                     break;
                 case "Video":
-                    GeneralFrame.Navigate(typeof(News), "Video");
+                    payload.parameter = "Video";
+                    GeneralFrame.Navigate(typeof(News), payload);
                     DebugTextBlock.Text = "Видео";
                     break;
                 case "Offtop":
-                    GeneralFrame.Navigate(typeof(News), "Offtopic");
+                    payload.parameter = "Offtopic";
+                    GeneralFrame.Navigate(typeof(News), payload);
                     DebugTextBlock.Text = "Оффтоп";
                     break;
                 case "Tweets":
@@ -101,6 +110,14 @@ namespace TJournal
             {
                 GeneralFrame.GoBack();
             }
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            Helpers.Payload payload = new Helpers.Payload();
+            payload.parameter = "Search";
+            payload.query = SearchBox.Text;
+            GeneralFrame.Navigate(typeof(News), payload);
         }
     }
 }

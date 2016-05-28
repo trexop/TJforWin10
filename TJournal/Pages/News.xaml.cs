@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 using TJ.Models;
 using Windows.UI;
+using static TJournal.MainPage;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -39,9 +40,9 @@ namespace TJournal.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             ViewModel.Offset = 0;
-            ViewModel.Parameter = e.Parameter.ToString();
+            ViewModel.Parameter = e.Parameter as Helpers.Payload;
             ViewModel.CreateCollections();
-            ViewModel.SetPivotItems(ViewModel.Parameter, ViewModel.Offset);
+            ViewModel.SetPivotItems(ViewModel.Parameter.parameter, ViewModel.Offset);
         }
 
         private void RelativePanel_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -78,7 +79,7 @@ namespace TJournal.Pages
                 var n = 30; // количество загружаемых новостей
                 int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n);
                 ViewModel.Offset += n;
-                ViewModel.SetPivotItems(ViewModel.Parameter, ViewModel.Offset);
+                ViewModel.SetPivotItems(ViewModel.Parameter.parameter, ViewModel.Offset);
             }
         }
     }

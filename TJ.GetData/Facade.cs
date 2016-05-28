@@ -26,9 +26,19 @@ namespace TJ.GetData
         private const string APIVersion = "2.3";
         public static ObservableCollection<BlackListedAccount> NewsBlackList { get; set; }
 
-        public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count, int offset)
+        public static async Task PopulateLatestNewsAsync(ObservableCollection<NewsApi> latestNews, string sorting, int Type, int Count, int offset, string Mode, string query)
         {
-            var newsWrapper = await GetNewsDataWrapperAsync(sorting, Type, Count, offset);
+            var newsWrapper = new List<NewsApi>();
+
+            if (Mode == "search")
+            {
+                newsWrapper = await GetSearchResults(query);
+            }
+            else
+            {
+                newsWrapper = await GetNewsDataWrapperAsync(sorting, Type, Count, offset);
+            }
+            
             Windows.Storage.ApplicationDataContainer localSettings =
                 Windows.Storage.ApplicationData.Current.LocalSettings;
 
@@ -82,13 +92,16 @@ namespace TJ.GetData
                 }
             }
 
-            var NextButton = new NewsApi();
-            int n = 30;
-            int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n); // количество загружаемых новостей
-            NextButton.IsThisANextButton = Visibility.Visible;
-            NextButton.ShowGenericInfo = Visibility.Collapsed;
-            NextButton.intro = String.Format("Загрузить следующие {0} записей", n);
-            latestNews.Add(NextButton);
+            if (Mode == "search") { } else
+            {
+                var NextButton = new NewsApi();
+                int n = 30;
+                int.TryParse(localSettings.Values["NumberOfOnetimeLoadedItems"].ToString(), out n); // количество загружаемых новостей
+                NextButton.IsThisANextButton = Visibility.Visible;
+                NextButton.ShowGenericInfo = Visibility.Collapsed;
+                NextButton.intro = String.Format("Загрузить следующие {0} записей", n);
+                latestNews.Add(NextButton);
+            }
         }
 
         public static async Task PopulateTweetsAsync(ObservableCollection<TweetsApi> tweets, string interval)
@@ -134,6 +147,7 @@ namespace TJ.GetData
                     tweet.inlineLinks.Add(new TweetLinks { text = tweet.text, short_link = "http://twitter.com", long_link = "http://twitter.com", hr_link = "" });
                 }
 
+                tweet.user.screen_name = "@" + tweet.user.screen_name;
                 tweets.Add(tweet);
             }
         }
@@ -167,6 +181,21 @@ namespace TJ.GetData
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonMessage));
 
             var result = (List<TweetsApi>)ser.ReadObject(ms);
+            return result;
+        }
+
+        public static async Task<List<NewsApi>> GetSearchResults(string query)
+        {
+            string url = String.Format("https://api.tjournal.ru/{0}/search?q={1}", APIVersion, query);
+
+            HttpClient http = new HttpClient();
+            var response = await http.GetAsync(url);
+            var jsonMessage = await response.Content.ReadAsStringAsync();
+
+            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(List<NewsApi>));
+            var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonMessage));
+
+            var result = (List<NewsApi>)ser.ReadObject(ms);
             return result;
         }
 

@@ -41,7 +41,9 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
         
+
         <RelativePanel Height="155" 
                        Name="Head"
                        Background="White"

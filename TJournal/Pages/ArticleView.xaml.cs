@@ -141,6 +141,8 @@ namespace TJournal.Pages
             {
                 RichTextBlock richtextblock = new RichTextBlock();
                 Paragraph paragraph = new Paragraph();
+                paragraph.Margin = new Thickness(20,0,20,0);
+
                 richtextblock.MaxWidth = 650;
                 richtextblock.Margin = new Thickness(0, 10, 0, 0);
                 richtextblock.TextWrapping = TextWrapping.Wrap;
@@ -494,11 +496,18 @@ namespace TJournal.Pages
                         MainView.Children.Add(rawwebview);
                         break;
                     case "link_embed_undeletable":
+                        Hyperlink embed_u_link = new Hyperlink();
+                        embed_u_link.NavigateUri = new Uri(block.data.url);
+                         
                         run.Text = block.data.url.ToString();
-                        paragraph.Inlines.Add(run);
+
+                        embed_u_link.Inlines.Add(run);
+                        paragraph.Inlines.Add(embed_u_link);
                         richtextblock.Blocks.Add(paragraph);
 
                         MainView.Children.Add(richtextblock);
+                        break;
+                    case "link_embed":
                         break;
                     default:
                         run.Text = block.data.text.ToString();

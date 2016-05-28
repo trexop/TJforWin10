@@ -53,8 +53,8 @@ namespace TJ.ViewModels
             }
         }
 
-        private string _Parameter;
-        public string Parameter
+        private Helpers.Payload _Parameter;
+        public Helpers.Payload Parameter
         {
             get
             {
@@ -94,6 +94,8 @@ namespace TJ.ViewModels
         public ObservableCollection<NewsApi> TjOfftop { get; set; }
         public ObservableCollection<NewsApi> TjOfftopUnadmitted { get; set; }
 
+        public ObservableCollection<NewsApi> TjSearch { get; set; }
+
         public void CreateCollections()
         {
             TjNews = new ObservableCollection<NewsApi>(); // Создаётся массив на основе модели
@@ -108,6 +110,8 @@ namespace TJ.ViewModels
 
             TjOfftop = new ObservableCollection<NewsApi>();
             TjOfftopUnadmitted = new ObservableCollection<NewsApi>();
+
+            TjSearch = new ObservableCollection<NewsApi>();    
         }
 
         public async void SetPivotItems(string page, int offset)
@@ -119,39 +123,59 @@ namespace TJ.ViewModels
             Facade.NewsBlackList = new ObservableCollection<GetData.BlackListedAccount>();
             Facade.PopulateBlackListedAccounts(Facade.NewsBlackList);
 
-            switch (NavigatedPage) // Настраиваем вкладки для разных страниц
+            try
             {
-                case "News":
-                    await Facade.PopulateLatestNewsAsync(TjNews, "mainpage", 0, n, offset); // Засовывает в массив кучку элементов, полученных после парсинга json
-                    await Facade.PopulateLatestNewsAsync(TjNewsRecent, "recent", 0, n, offset);
-                    await Facade.PopulateLatestNewsAsync(TjNewsEditorial, "editorial", 0, n, offset);
+                switch (NavigatedPage) // Настраиваем вкладки для разных страниц
+                {
+                    case "News":
+                        await Facade.PopulateLatestNewsAsync(TjNews, "mainpage", 0, n, offset, "news", ""); // Засовывает в массив кучку элементов, полученных после парсинга json
+                        await Facade.PopulateLatestNewsAsync(TjNewsRecent, "recent", 0, n, offset, "news", "");
+                        await Facade.PopulateLatestNewsAsync(TjNewsEditorial, "editorial", 0, n, offset, "news", "");
 
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Главное", IsEnabled = true, Content =  TjNews});
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = false, Content = TjNewsRecent });
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Редакция", IsEnabled = false, Content = TjNewsEditorial }); // Добавляет всё в PivotItems
-                    break;
-                case "Articles":
-                    await Facade.PopulateLatestNewsAsync(TjArticles, "recent", 4, n, offset);
-                    await Facade.PopulateLatestNewsAsync(TjArticlesUnadmitted, "unadmitted", 4, n, offset);
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Главное", IsEnabled = true, Content = TjNews });
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = false, Content = TjNewsRecent });
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Редакция", IsEnabled = false, Content = TjNewsEditorial }); // Добавляет всё в PivotItems
+                        break;
+                    case "Articles":
+                        await Facade.PopulateLatestNewsAsync(TjArticles, "recent", 4, n, offset, "news", "");
+                        await Facade.PopulateLatestNewsAsync(TjArticlesUnadmitted, "unadmitted", 4, n, offset, "news", "");
 
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjArticles });
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjArticlesUnadmitted });
-                    break;
-                case "Video":
-                    await Facade.PopulateLatestNewsAsync(TjVideo, "recent", 3, n, offset);
-                    await Facade.PopulateLatestNewsAsync(TjVideoUnadmitted, "unadmitted", 3, n, offset);
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjArticles });
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjArticlesUnadmitted });
+                        break;
+                    case "Video":
+                        await Facade.PopulateLatestNewsAsync(TjVideo, "recent", 3, n, offset, "news", "");
+                        await Facade.PopulateLatestNewsAsync(TjVideoUnadmitted, "unadmitted", 3, n, offset, "news", "");
 
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjVideo });
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjVideoUnadmitted });
-                    break;
-                case "Offtopic":
-                    await Facade.PopulateLatestNewsAsync(TjOfftop, "mainpage", 2, n, offset);
-                    await Facade.PopulateLatestNewsAsync(TjOfftopUnadmitted, "unadmitted", 2, n, offset);
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjVideo });
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjVideoUnadmitted });
+                        break;
+                    case "Offtopic":
+                        await Facade.PopulateLatestNewsAsync(TjOfftop, "mainpage", 2, n, offset, "news", "");
+                        await Facade.PopulateLatestNewsAsync(TjOfftopUnadmitted, "unadmitted", 2, n, offset, "news", "");
 
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjOfftop });
-                    PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjOfftopUnadmitted }); // При навигации сюда падает, я в курсе
-                    break;
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = true, Content = TjOfftop });
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Непризнанное", IsEnabled = false, Content = TjOfftopUnadmitted }); // При навигации сюда падает, я в курсе
+                        break;
+                    case "Search":
+                        await Facade.PopulateLatestNewsAsync(TjSearch, "mainpage", 1, 30, 0, "search", Parameter.query);
+
+                        PivotItemsWrapper.Add(new PivotItems { Header = "Результаты поиска", IsEnabled = true, Content = TjSearch });
+                        break;
+                }
             }
+            catch (Exception)
+            {
+                ErrorWhileLoadingData();
+            }
+        }
+
+        public async void ErrorWhileLoadingData ()
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog("Что-то пошло не так. Во время загрузки данных произошла ошибка, сервер не ответил. Но вы держитесь там", ":'(");
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Всего доброго") { Id = 1 });
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Хорошего настроения") { Id = 2 });
+            await dialog.ShowAsync();
         }
     }
 }
