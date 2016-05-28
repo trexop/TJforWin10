@@ -97,5 +97,6 @@ namespace TJ.Models
         public Visibility ShowNewsDetailsInSidebar { get; set; }
         public Visibility IsThisANextButton { get; set; }
         public Visibility ShowGenericInfo { get; set; }
+        public Visibility _isReadMore { get; set; }
     }
 }

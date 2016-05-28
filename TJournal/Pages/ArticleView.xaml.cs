@@ -509,6 +509,20 @@ namespace TJournal.Pages
                         break;
                     case "link_embed":
                         break;
+                    case "gallery":
+                        FlipView gallery_flipview = new FlipView();
+                        gallery_flipview.MaxWidth = 650;
+                        foreach (var item in block.data.files)
+                        {
+                            var flip_image_uri = new Uri(item.bigUrl);
+
+                            Image flipview_image = new Image();
+                            flipview_image.Source = new BitmapImage(flip_image_uri);
+
+                            gallery_flipview.Items.Add(flipview_image);
+                        }
+                        MainView.Children.Add(gallery_flipview);
+                        break;
                     default:
                         run.Text = block.data.text.ToString();
                         paragraph.Inlines.Add(run);

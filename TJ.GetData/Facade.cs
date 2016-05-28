@@ -55,10 +55,12 @@ namespace TJ.GetData
 
                 if (localSettings.Values["NewsContentVisible"] != null)
                 { Boolean.TryParse(localSettings.Values["NewsContentVisible"].ToString(), out temp); }
-                if (temp == true)
-                { item.ShowNewsDetailsInSidebar = Visibility.Collapsed; }
-                else
-                { item.ShowNewsDetailsInSidebar = Visibility.Visible; }
+
+                item.ShowNewsDetailsInSidebar = Visibility.Visible;
+                if (temp == true) { item.ShowNewsDetailsInSidebar = Visibility.Collapsed; }
+
+                item._isReadMore = Visibility.Collapsed;
+                if (item.isReadMore == true) { item._isReadMore = Visibility.Visible; };
 
                 item.ShowGenericInfo = Visibility.Visible;
                 item.IsThisANextButton = Visibility.Collapsed;

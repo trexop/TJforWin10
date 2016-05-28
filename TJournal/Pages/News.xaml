@@ -128,13 +128,24 @@
                                                 <Run Text="{x:Bind intro}"/>
                                             </Paragraph>
                                         </RichTextBlock>
-                                        <Image RelativePanel.Below="ArticleText" 
-                                                       RelativePanel.AlignLeftWithPanel="True" 
-                                                       RelativePanel.AlignRightWithPanel="True" 
-                                                       Visibility="{x:Bind ShowNewsDetailsInSidebar}"
+                                        <Image Name="thumbnail_image"
+                                               RelativePanel.Below="ArticleText" 
+                                               RelativePanel.AlignLeftWithPanel="True" 
+                                               RelativePanel.AlignRightWithPanel="True" 
+                                               Visibility="{x:Bind ShowNewsDetailsInSidebar}"
                                                Margin="10,10,10,10" MaxHeight="120" 
                                                Stretch="UniformToFill" RelativePanel.RightOf="ArticleText" 
                                                Source="{x:Bind cover.url, Mode=TwoWay}" />
+                                        <StackPanel Orientation="Horizontal"
+                                                    RelativePanel.Below="thumbnail_image"
+                                                    RelativePanel.AlignRightWithPanel="True"
+                                                    Margin="0,0,10,10"
+                                                    Background="#eee"
+                                                    Visibility="{x:Bind _isReadMore}">
+                                            <TextBlock Text="Читать далее" Foreground="Gray" Margin="10,2"/>
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Margin="0,2,10,2" FontSize="24" Foreground="Gray"
+                                                       Text="&#xE712;"/>
+                                        </StackPanel>
                                     </RelativePanel>
 
                                     <Grid Visibility="{x:Bind IsThisANextButton}"
