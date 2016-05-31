@@ -16,6 +16,7 @@ using TJ.ViewModels;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -139,33 +140,39 @@ namespace TJournal.Pages
 
             foreach (var block in content.data)
             {
-                RichTextBlock richtextblock = new RichTextBlock();
-                Paragraph paragraph = new Paragraph();
-                paragraph.Margin = new Thickness(20,0,20,0);
+                RichTextBlock richtextblock = 
+                    new RichTextBlock {
+                        MaxWidth = 650,
+                        Margin = new Thickness(0,10,0,0),
+                        TextWrapping = TextWrapping.Wrap
+                    };
+                Paragraph paragraph = new Paragraph {
+                    Margin = new Thickness(20,0,20,0)
+                };
 
-                richtextblock.MaxWidth = 650;
-                richtextblock.Margin = new Thickness(0, 10, 0, 0);
-                richtextblock.TextWrapping = TextWrapping.Wrap;
                 Run run = new Run();
 
                 switch (block.type)
                 {
                     case "image_extended":
                         var imgUri = new Uri(block.data.file.url);
-                        Image image = new Image();
 
-                        image.Source = new BitmapImage(imgUri);
-                        image.Margin = new Thickness(0,20,0,0);
-                        image.MaxWidth = 650;
+                        Image image = 
+                            new Image {
+                                Source = new BitmapImage(imgUri),
+                                Margin = new Thickness(0,20,0,0),
+                                MaxWidth = 650
+                            };
 
                         MainView.Children.Add(image);
 
                         if (block.data.caption != null) // Если есть, добавить подпись к изображению
                         {
-                            TextBlock image_sign = new TextBlock();
-                            image_sign.Text = block.data.caption;
-                            image_sign.Foreground = GetColorFromHexa("#757575");
-                            image_sign.Margin = new Thickness(20,0,0,0);
+                            TextBlock image_sign = 
+                                new TextBlock { Text = block.data.caption,
+                                    Foreground = GetColorFromHexa("#757575"),
+                                    Margin = new Thickness(20, 0, 0, 0)
+                                };
                             MainView.Children.Add(image_sign);
                         }
                         break;
@@ -184,9 +191,11 @@ namespace TJournal.Pages
                             @" height=" + videoheight + @" src=""http://www.youtube.com/embed/" +
                             videoid + @"?rel=0"" frameborder=""0"" allowfullscreen></iframe>";
 
-                        WebView webview = new WebView();
-                        webview.Width = videowidth + 20;
-                        webview.Height = videoheight + 20;
+                        WebView webview = new WebView {
+                            Width = videowidth + 20,
+                            Height = videoheight + 20
+                        };
+
                         webview.NavigateToString(html);
 
                         MainView.Children.Add(webview);
@@ -202,9 +211,11 @@ namespace TJournal.Pages
                         {
                             var par = Regex.Split(x, "</p>")[0];
                             Run paragraph_text = new Run();
-                            Paragraph paragraph_body = new Paragraph();
-                            paragraph_body.Margin = new Thickness(20, 10, 20, 10);
-                            paragraph_text.FontSize = TextFontSize;
+                            Paragraph paragraph_body = new Paragraph {
+                                Margin = new Thickness(20, 10, 20, 10), 
+                                FontSize = TextFontSize
+                            };
+
                             InlineUIContainer inlineUIContainer = new InlineUIContainer();
 
                             var testregex = Regex.Split(par, pattern);
@@ -237,15 +248,15 @@ namespace TJournal.Pages
                                                 afteritalic = "";
                                             }
 
-                                            Run italicrun = new Run();
-                                            Run afteritalicrun = new Run();
-
-                                            italicrun.Text = italicpiece;
-                                            italicrun.FontSize = TextFontSize;
-                                            italicrun.FontStyle = FontStyle.Italic;
-
-                                            afteritalicrun.Text = afteritalic;
-                                            afteritalicrun.FontSize = TextFontSize;
+                                            Run italicrun = new Run {
+                                                Text = italicpiece,
+                                                FontSize = TextFontSize,
+                                                FontStyle = FontStyle.Italic
+                                            };
+                                            Run afteritalicrun = new Run {
+                                                Text = afteritalic,
+                                                FontSize = TextFontSize
+                                            };
 
                                             paragraph_body.Inlines.Add(italicrun);
                                             paragraph_body.Inlines.Add(afteritalicrun);
@@ -275,15 +286,15 @@ namespace TJournal.Pages
                                                 afterbold = "";
                                             }
 
-                                            Run boldrun = new Run();
-                                            Run afterboldrun = new Run();
-
-                                            boldrun.Text = boldpiece;
-                                            boldrun.FontSize = TextFontSize;
-                                            boldrun.FontWeight = FontWeights.Bold;
-
-                                            afterboldrun.Text = afterbold;
-                                            afterboldrun.FontSize = TextFontSize;
+                                            Run boldrun = new Run {
+                                                Text = boldpiece,
+                                                FontSize = TextFontSize,
+                                                FontWeight = FontWeights.Bold
+                                            };
+                                            Run afterboldrun = new Run {
+                                                Text = afterbold,
+                                                FontSize = TextFontSize
+                                            };
 
                                             paragraph_body.Inlines.Add(boldrun);
                                             paragraph_body.Inlines.Add(afterboldrun);
@@ -319,19 +330,18 @@ namespace TJournal.Pages
                                             {
                                                 afterlink = Regex.Split(linkcontainer[1], "</a>")[1];
                                             }
-                                            
-                                            Run linkrun = new Run();
-                                            Run afterlinkrun = new Run();
 
-                                            linkrun.Text = linktext;
-                                            linkrun.FontSize = TextFontSize;
-                                            linkrun.Foreground = GetColorFromHexa("#1c69a9");
+                                            Run linkrun = new Run {
+                                                Text = linktext,
+                                                FontSize = TextFontSize,
+                                                Foreground = GetColorFromHexa("#1c69a9")
+                                            };
+                                            Run afterlinkrun = new Run {
+                                                Text = afterlink,
+                                                FontSize = TextFontSize
+                                            };
 
-                                            afterlinkrun.Text = afterlink;
-                                            afterlinkrun.FontSize = TextFontSize;
-
-                                            Hyperlink hyperlink = new Hyperlink();
-                                            hyperlink.NavigateUri = new Uri(linksource);
+                                            Hyperlink hyperlink = new Hyperlink { NavigateUri = new Uri(linksource) };
 
                                             paragraph_body.Inlines.Add(hyperlink);
                                             hyperlink.Inlines.Add(linkrun);
@@ -365,23 +375,26 @@ namespace TJournal.Pages
                         InlineUIContainer InlineUI = new InlineUIContainer();
                         var quote_paragraphs = Regex.Split(quote_textblock, "<p>");
 
-                        StackPanel stackpanel = new StackPanel();
-                        stackpanel.Background = GetColorFromHexa("#F6F6F6");
-                        stackpanel.Margin = new Thickness(0,20,0,0);
-                        stackpanel.MaxWidth = 650;
+                        StackPanel stackpanel = new StackPanel {
+                            Background = GetColorFromHexa("#F6F6F6"),
+                            Margin = new Thickness(0,20,0,0),
+                            MaxWidth = 650
+                        };
 
                         foreach (var par in quote_paragraphs)
                         {
                             if (par.Length > 1) // Легаси пиздец из старых версий, лень переделывать прост))
                             {
-                                TextBlock para = new TextBlock();
+                                
                                 Paragraph addin = new Paragraph();
                                 var abzac = Regex.Split(par.ToString(), "</p>");
 
-                                para.Text = abzac[0];
-                                para.FontSize = TextFontSize;
-                                para.TextWrapping = TextWrapping.Wrap;
-                                para.Margin = new Thickness(20, 20, 20, 20);
+                                TextBlock para = new TextBlock {
+                                    Text = abzac[0],
+                                    FontSize = TextFontSize,
+                                    TextWrapping = TextWrapping.Wrap,
+                                    Margin = new Thickness(20)
+                                };
 
                                 stackpanel.Children.Add(para);
                             } 
@@ -389,69 +402,79 @@ namespace TJournal.Pages
 
                         if (block.data.cite != null)
                         {
-                            TextBlock author = new TextBlock();
                             var quote_author = block.data.cite;
-                            
-                            author.Text = quote_author;
-                            author.FontSize = TextFontSize;
-                            author.FontWeight = FontWeights.Bold;
-                            author.Margin = new Thickness(20, 0, 20, 20);
-                            author.TextWrapping = TextWrapping.Wrap;
+
+                            TextBlock author = new TextBlock {
+                                Text = quote_author,
+                                FontSize = TextFontSize,
+                                FontWeight = FontWeights.Bold,
+                                Margin = new Thickness(20, 0, 20, 20),
+                                TextWrapping = TextWrapping.Wrap
+                            };
 
                             stackpanel.Children.Add(author);
                         }
                         MainView.Children.Add(stackpanel);
                         break;
                     case "tweet":
-                        RelativePanel tweetRelativePanel = new RelativePanel();
-                        tweetRelativePanel.BorderBrush = GetColorFromHexa("#eeeeee");
-                        tweetRelativePanel.BorderThickness = new Thickness(1,1,1,1);
-                        tweetRelativePanel.Margin = new Thickness(20,10,20,10);
+                        RelativePanel tweetRelativePanel = new RelativePanel {
+                            BorderBrush = GetColorFromHexa("#eeeeee"),
+                            BorderThickness = new Thickness(1, 1, 1, 1),
+                            Margin = new Thickness(20, 10, 20, 10)
+                        };
 
                         // set author's avatar
-                        var tweetAuthorImageLink = new Uri(block.data.user.profile_image_url);
-                        Image tweetAuthorImage = new Image();
 
-                        tweetAuthorImage.Source = new BitmapImage(tweetAuthorImageLink);
-                        tweetAuthorImage.Margin = new Thickness(10,10,10,10);
-                        tweetAuthorImage.Height = 50;
-                        tweetAuthorImage.Width = 50;
-                        tweetAuthorImage.Name = "tweetAuthorAvatar";
+                        var tweetAuthorImageLink = new Uri(block.data.user.profile_image_url);
+
+                        Image tweetAuthorImage = new Image {
+                            Source = new BitmapImage(tweetAuthorImageLink),
+                            Margin = new Thickness(10, 10, 10, 10),
+                            Height = 50,
+                            Width = 50,
+                            Name = "tweetAuthorAvatar",
+                        };
 
                         tweetRelativePanel.Children.Add(tweetAuthorImage);
 
                         // set tweet author's name
-                        RelativePanel tweetAuthorNames = new RelativePanel();
-                        tweetAuthorNames.Margin = new Thickness(0,10,0,0);
-                        tweetAuthorNames.Height = 50;
+
+                        RelativePanel tweetAuthorNames = new RelativePanel {
+                            Margin = new Thickness(0, 10, 0, 0),
+                            Height = 50
+                        };
+                        
                         tweetAuthorNames.SetValue(RelativePanel.RightOfProperty, "tweetAuthorAvatar");
 
-                        TextBlock tweetAuthorDisplayName = new TextBlock();
-                        TextBlock tweetAuthorRealName = new TextBlock();
-
-                        tweetAuthorDisplayName.Text = "@" + block.data.user.screen_name;
-                        tweetAuthorDisplayName.Foreground = GetColorFromHexa("#757575");
-                        tweetAuthorDisplayName.Margin = new Thickness(10,0,0,5);
+                        TextBlock tweetAuthorDisplayName = new TextBlock {
+                            Text = "@" + block.data.user.screen_name,
+                            Foreground = GetColorFromHexa("#757575"),
+                            Margin = new Thickness(10, 0, 0, 5),
+                        };
                         tweetAuthorDisplayName.SetValue(RelativePanel.AlignBottomWithPanelProperty, true);
 
-                        tweetAuthorRealName.Text = block.data.user.name;
-                        tweetAuthorRealName.Margin = new Thickness(10,5,0,0);
+                        TextBlock tweetAuthorRealName = new TextBlock {
+                            Text = block.data.user.name,
+                            Margin = new Thickness(10, 5, 0, 0)
+                        };
                         tweetAuthorRealName.SetValue(RelativePanel.AlignTopWithPanelProperty, true);
 
                         tweetAuthorNames.Children.Add(tweetAuthorDisplayName);
                         tweetAuthorNames.Children.Add(tweetAuthorRealName);
 
                         tweetRelativePanel.Children.Add(tweetAuthorNames);
-                        // add open in browser button
-                        Button goToTweet = new Button();
-                        goToTweet.Content = "К твиту";
-                        goToTweet.Name = "goToTweet";
-                        goToTweet.Margin = new Thickness(0, 10, 10, 0);
-                        goToTweet.Background = GetColorFromHexa("#FFFFFF");
-                        goToTweet.Foreground = GetColorFromHexa("#757575");
 
-                        goToTweet.BorderBrush = GetColorFromHexa("#757575");
-                        goToTweet.BorderThickness = new Thickness(1, 1, 1, 1);
+                        // add open in browser button
+
+                        Button goToTweet = new Button {
+                            Content = "К твиту",
+                            Name = "goToTweet",
+                            Margin = new Thickness(0, 10, 10, 0),
+                            Background = GetColorFromHexa("#FFFFFF"),
+                            Foreground = GetColorFromHexa("#757575"),
+                            BorderBrush = GetColorFromHexa("#757575"),
+                            BorderThickness = new Thickness(1)
+                        };
 
                         goToTweet.SetValue(RelativePanel.AlignRightWithPanelProperty, true);
                         goToTweet.Click += new RoutedEventHandler(goToTweet_Click(block.data.status_url));
@@ -498,9 +521,12 @@ namespace TJournal.Pages
                     case "rawhtml":
                         string rawhtml = block.data.raw;
                         var rawhtmlheight = Regex.Split(Regex.Split(block.data.raw, "height=\"")[1], "\" ")[0];
-                        WebView rawwebview = new WebView();
-                        rawwebview.MaxWidth = 650;
-                        rawwebview.Height = int.Parse(rawhtmlheight) + 20;
+
+                        WebView rawwebview = new WebView {
+                            MaxWidth = 650,
+                            Height = int.Parse(rawhtmlheight) + 20
+                        };
+                        
                         rawwebview.NavigateToString(rawhtml);
                         
                         MainView.Children.Add(rawwebview);
@@ -525,10 +551,7 @@ namespace TJournal.Pages
                         foreach (var item in block.data.files)
                         {
                             var flip_image_uri = new Uri(item.bigUrl);
-
-                            Image flipview_image = new Image();
-                            flipview_image.Source = new BitmapImage(flip_image_uri);
-
+                            Image flipview_image = new Image { Source = new BitmapImage(flip_image_uri) };
                             gallery_flipview.Items.Add(flipview_image);
                         }
                         MainView.Children.Add(gallery_flipview);
@@ -606,6 +629,30 @@ namespace TJournal.Pages
         private void Close_ImageViewer(object sender, RoutedEventArgs e)
         {
             ImageViewer.Visibility = Visibility.Collapsed;
+        }
+
+        private async void Ignore_User(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Windows.UI.Popups.MessageDialog(
+                "Вы действительно хотите игнорировать пользователя" + ArticleInfoAuthor.Text + "?", "Подтверждение");
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Да, он заебал уже") { Id = 1, Invoked = new UICommandInvokedHandler(this.CommandInvokedHandler) });
+            dialog.Commands.Add(new Windows.UI.Popups.UICommand("Пожалуй, нет") { Id = 2, Invoked = new UICommandInvokedHandler(this.CommandInvokedHandler) });
+
+            dialog.DefaultCommandIndex = 0;
+            await dialog.ShowAsync();
+        }
+
+        private void CommandInvokedHandler(IUICommand command)
+        {
+            var s = command.Id.ToString();
+            switch (s)
+            {
+                case "1":
+                    SettingsViewModel.AddUserToBlackList(int.Parse(UserId.Text));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

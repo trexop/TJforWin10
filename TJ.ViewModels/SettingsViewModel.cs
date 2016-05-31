@@ -209,7 +209,7 @@ namespace TJ.ViewModels
 
         public ObservableCollection<GetData.BlackListedAccount> NewsBlackList { get; set; }
 
-        public async void SaveBlackListCollection(object collection)
+        public static async void SaveBlackListCollection(object collection)
         {
             var folder = ApplicationData.Current.LocalFolder;
             var file = await folder.CreateFileAsync("blacklist.json", CreationCollisionOption.ReplaceExisting);
@@ -222,11 +222,18 @@ namespace TJ.ViewModels
             }
         }
 
-        public void AddUserToBlacklist()
+        public void AddCurrentUserToBlacklist()
         {
             NewsBlackList.Add(new BlackListedAccount { id = int.Parse(UserID) });
             SaveBlackListCollection(NewsBlackList);
             UserID = "";
+        }
+
+        public static async void AddUserToBlackList(int userid)
+        {
+            var blacklist = await Facade.GetBlackListCollection();
+            blacklist.Add(new BlackListedAccount { id = userid });
+            SaveBlackListCollection(blacklist);
         }
 
         public void RemoveUserFromBlacklist(object sender, ItemClickEventArgs e)

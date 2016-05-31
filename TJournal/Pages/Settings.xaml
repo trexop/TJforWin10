@@ -156,7 +156,7 @@
                                 Margin="10,0,0,0"
                                 Name="AddUserToBlacklist"
                                 BorderBrush="#eee" BorderThickness="2" Background="White"
-                                Click="{x:Bind ViewModel.AddUserToBlacklist}">
+                                Click="{x:Bind ViewModel.AddCurrentUserToBlacklist}">
                             <TextBlock Text="&#xE109;"
                                        Foreground="#757575"
                                        FontFamily="Segoe MDL2 Assets" 

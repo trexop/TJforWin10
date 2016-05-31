@@ -52,7 +52,9 @@
                                         <StackPanel Name="Author"
                                                 Orientation="Horizontal"
                                                 Margin="10,10,0,0">
+                                            
                                             <Image Name="Avatar" Source="{x:Bind author.profile_image_url}" Height="50" Width="50"></Image>
+
                                             <RelativePanel Margin="10,0,0,0">
                                                 <TextBlock Text="{x:Bind author.name}" RelativePanel.AlignTopWithPanel="True"></TextBlock>
                                                 <TextBlock Text="{x:Bind dateRFC}" RelativePanel.AlignBottomWithPanel="True"></TextBlock>
