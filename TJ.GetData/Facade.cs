@@ -115,33 +115,23 @@ namespace TJ.GetData
                 tweet.inlineLinks = new List<TweetLinks>();
                 string[] el_links = { "http://twitter.com", "http://twitter.com", "" };
 
-                var test1 = tweet.text.IndexOf("[[");
-                var test2 = tweet.text.IndexOf("\\[\\[");
-
                 if (tweet.text.IndexOf("[[") > -1)
                 {
                     var te = tweet.text;
-                    var urls = Regex.Split(te, "\\[\\[");
+                    var urls = Regex.Split(te, "\\[\\[|\\]\\]");
 
-                    for (var i = 1; i < urls.Length ; i++)
+                    foreach (var el in urls)
                     {
-                        var str = urls[i];
-                        var strings = Regex.Split(urls[i], "\\]\\]"); // Убираем ненужные символы, разбиваем на массив
-                        foreach (var el in strings)
+                        if (el.IndexOf("||")>0)
                         {
-                            if (el.IndexOf("||")>0)
-                            {
-                                el_links = Regex.Split(el, "\\|\\|");
-                                tweet.inlineLinks.Add(new TweetLinks { text = urls[0], short_link = el_links[0], long_link = el_links[1], hr_link = el_links[2] });
-                            }
-                            else
-                            {
-                                tweet.inlineLinks.Add(new TweetLinks { text = urls[0], short_link = "http://twitter.com", long_link = "http://twitter.com", hr_link = "" });
-                            }
+                            el_links = Regex.Split(el, "\\|\\|");
+                            tweet.inlineLinks.Add(new TweetLinks { text = "", short_link = el_links[0], long_link = el_links[1], hr_link = el_links[2] });
+                        }
+                        else
+                        {
+                            tweet.inlineLinks.Add(new TweetLinks { text = el, short_link = "http://twitter.com", long_link = "http://twitter.com", hr_link = "" });
                         }
                     }
-
-                    tweet.text = urls[0];
                     
                 }
                 else

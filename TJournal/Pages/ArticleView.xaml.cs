@@ -252,7 +252,10 @@ namespace TJournal.Pages
 
                                             if (afteritalic == "")
                                             {
-                                                richtextblock.Blocks.Add(paragraph_body);
+                                                try
+                                                {
+                                                    richtextblock.Blocks.Add(paragraph_body);
+                                                } catch (Exception) { }
                                             }
                                             break;
                                         case "0100":
@@ -287,7 +290,10 @@ namespace TJournal.Pages
 
                                             if (afterbold == "")
                                             {
-                                                richtextblock.Blocks.Add(paragraph_body);
+                                                try
+                                                {
+                                                    richtextblock.Blocks.Add(paragraph_body);
+                                                } catch (Exception) { }
                                             }
                                             break;
                                         case "0001":
@@ -333,7 +339,11 @@ namespace TJournal.Pages
 
                                             if(afterlink == "")
                                             {
-                                                richtextblock.Blocks.Add(paragraph_body);
+                                                try
+                                                {
+                                                    richtextblock.Blocks.Add(paragraph_body);
+                                                }
+                                                catch (Exception) { }
                                             }
                                             break;
                                         default:

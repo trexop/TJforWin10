@@ -77,18 +77,12 @@
                                             </RelativePanel>
                                         </StackPanel>
                                         <StackPanel Name="Body" RelativePanel.Below="Author" Margin="10" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
-                                            
-                                                        <RichTextBlock Margin="10,0,10,0">
-                                                            <Paragraph>
-                                                                <Paragraph.Inlines>
-                                                                    <Run FontSize="20" Text="{x:Bind text}"/>
-                                                                    <Hyperlink NavigateUri="{x:Bind inlineLinks[0].short_link}">
-                                                                        <Run FontSize="18" Text="{x:Bind inlineLinks[0].hr_link}"/>
-                                                                    </Hyperlink>
-                                                                </Paragraph.Inlines>
-                                                            </Paragraph>
-                                                        </RichTextBlock>
-                                                        
+
+
+                                            <RichTextBlock data:BindingHelper.Text="{x:Bind inlineLinks}" Margin="0,10,0,10">
+
+                                            </RichTextBlock>
+
                                             <ListView x:Name="previewList" ItemsSource="{x:Bind media}"
                                                       IsItemClickEnabled="True"
                                                       ItemClick="previewList_ItemClick">
