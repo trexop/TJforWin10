@@ -50,6 +50,7 @@ namespace TJ.Models
         // raw data
         public string raw { get; set; }
         public string url { get; set; }
+        public string instagram_url { get; set; }
         public List<File> files { get; set; }
     }
 

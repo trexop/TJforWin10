@@ -168,6 +168,7 @@ namespace TJournal.Pages
                 };
 
                 Run run = new Run();
+                HttpClient http = new HttpClient();
 
                 switch (block.type)
                 {
@@ -437,7 +438,6 @@ namespace TJournal.Pages
                         var requesturi = 
                             String.Format("https://publish.twitter.com/oembed?url={0}&omit_script=true&hide_thread=true", block.data.status_url);
 
-                        HttpClient http = new HttpClient();
                         var response = await http.GetAsync(requesturi);
                         var gzJsonMessage = await response.Content.ReadAsByteArrayAsync();
                         var jsonMessage = UnGzip(gzJsonMessage);
@@ -457,6 +457,30 @@ namespace TJournal.Pages
                             "</head><body><div id=\"wrapper\">" + twiresponse.html + "</div></body></html>");
 
                         MainView.Children.Add(twiwebview);
+                        break;
+                    case "instagram":
+                        var insta_uri =
+                            String.Format("https://api.instagram.com/oembed?url={0}&omit_script=true", block.data.instagram_url);
+
+                        var instaresponse = await http.GetAsync(insta_uri);
+                        var insta_jsonMessage = await instaresponse.Content.ReadAsStringAsync();
+
+                        DataContractJsonSerializer insta_ser = new DataContractJsonSerializer(typeof(Insta_Embed));
+                        var insta_ms = new MemoryStream(Encoding.UTF8.GetBytes(insta_jsonMessage));
+                        var insta_response = (Insta_Embed)insta_ser.ReadObject(insta_ms);
+
+                        WebView insta_webview = new WebView
+                        {
+                            MaxWidth = 550,
+                            Height = insta_response.thumbnail_height + 90,
+                            Margin = new Thickness(0,10,0,10)
+                        };
+
+                        insta_webview.NavigateToString("<!DOCTYPE HTML><html><head>" +
+                            "<script async src=\"http://platform.instagram.com/en_US/embeds.js\" charset=\"utf-8\"></script>" +
+                            "</head><body><div id=\"wrapper\">" + insta_response.html + "</div></body></html>");
+
+                        MainView.Children.Add(insta_webview);
                         break;
                     case "rawhtml":
                         string rawhtml = block.data.raw;
@@ -478,12 +502,14 @@ namespace TJournal.Pages
                         run.Text = block.data.url.ToString();
 
                         embed_u_link.Inlines.Add(run);
+                        paragraph.Inlines.Add(new Run { Text = "Оригинал:" });
                         paragraph.Inlines.Add(embed_u_link);
                         richtextblock.Blocks.Add(paragraph);
 
                         MainView.Children.Add(richtextblock);
                         break;
                     case "link_embed":
+                        var link_embed = block.data;
                         break;
                     case "gallery":
                         FlipView gallery_flipview = new FlipView();

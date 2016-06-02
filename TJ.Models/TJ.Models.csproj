@@ -110,6 +110,7 @@
     <Compile Include="ArticleApi.cs" />
     <Compile Include="ArticleContent.cs" />
     <Compile Include="Helpers.cs" />
+    <Compile Include="Insta_Embed.cs" />
     <Compile Include="NewsApi.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
