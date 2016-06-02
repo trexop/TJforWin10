@@ -113,6 +113,7 @@
     <Compile Include="NewsApi.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TweetEmbed.cs" />
     <Compile Include="TweetsApi.cs" />
     <EmbeddedResource Include="Properties\TJ.Models.rd.xml" />
   </ItemGroup>

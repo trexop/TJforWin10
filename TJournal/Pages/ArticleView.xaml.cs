@@ -5,9 +5,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using TJ.GetData;
@@ -60,6 +64,19 @@ namespace TJournal.Pages
             byte B = Convert.ToByte(hexaColor.Substring(5, 2), 16);
             SolidColorBrush scb = new SolidColorBrush(Color.FromArgb(0xFF, R, G, B));
             return scb;
+        }
+
+        public static string UnGzip(byte[] bytes)
+        {
+            using (var msi = new MemoryStream(bytes))
+            using (var mso = new MemoryStream())
+            {
+                using (var gs = new GZipStream(msi, CompressionMode.Decompress))
+                {
+                    gs.CopyTo(mso);
+                }
+                return Encoding.UTF8.GetString(mso.ToArray());
+            }
         }
 
         private ArticleWrapper _ArticleInfo { get; set; }
@@ -417,106 +434,29 @@ namespace TJournal.Pages
                         MainView.Children.Add(stackpanel);
                         break;
                     case "tweet":
-                        RelativePanel tweetRelativePanel = new RelativePanel {
-                            BorderBrush = GetColorFromHexa("#eeeeee"),
-                            BorderThickness = new Thickness(1, 1, 1, 1),
-                            Margin = new Thickness(20, 10, 20, 10)
-                        };
+                        var requesturi = 
+                            String.Format("https://publish.twitter.com/oembed?url={0}&omit_script=true&hide_thread=true", block.data.status_url);
 
-                        // set author's avatar
+                        HttpClient http = new HttpClient();
+                        var response = await http.GetAsync(requesturi);
+                        var gzJsonMessage = await response.Content.ReadAsByteArrayAsync();
+                        var jsonMessage = UnGzip(gzJsonMessage);
 
-                        var tweetAuthorImageLink = new Uri(block.data.user.profile_image_url);
+                        DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(TweetEmbed));
+                        var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonMessage));
+                        var twiresponse = (TweetEmbed)ser.ReadObject(ms);
 
-                        Image tweetAuthorImage = new Image {
-                            Source = new BitmapImage(tweetAuthorImageLink),
-                            Margin = new Thickness(10, 10, 10, 10),
-                            Height = 50,
-                            Width = 50,
-                            Name = "tweetAuthorAvatar",
-                        };
-
-                        tweetRelativePanel.Children.Add(tweetAuthorImage);
-
-                        // set tweet author's name
-
-                        RelativePanel tweetAuthorNames = new RelativePanel {
-                            Margin = new Thickness(0, 10, 0, 0),
-                            Height = 50
+                        WebView twiwebview = new WebView {
+                            MaxWidth = 550,
+                            Height = 220,
+                            Margin = new Thickness(0,10,0,10)
                         };
                         
-                        tweetAuthorNames.SetValue(RelativePanel.RightOfProperty, "tweetAuthorAvatar");
+                        twiwebview.NavigateToString("<!DOCTYPE HTML><html><head>" +
+                            "<script async src=\"http://platform.twitter.com/widgets.js\" charset=\"utf-8\"></script>" +
+                            "</head><body><div id=\"wrapper\">" + twiresponse.html + "</div></body></html>");
 
-                        TextBlock tweetAuthorDisplayName = new TextBlock {
-                            Text = "@" + block.data.user.screen_name,
-                            Foreground = GetColorFromHexa("#757575"),
-                            Margin = new Thickness(10, 0, 0, 5),
-                        };
-                        tweetAuthorDisplayName.SetValue(RelativePanel.AlignBottomWithPanelProperty, true);
-
-                        TextBlock tweetAuthorRealName = new TextBlock {
-                            Text = block.data.user.name,
-                            Margin = new Thickness(10, 5, 0, 0)
-                        };
-                        tweetAuthorRealName.SetValue(RelativePanel.AlignTopWithPanelProperty, true);
-
-                        tweetAuthorNames.Children.Add(tweetAuthorDisplayName);
-                        tweetAuthorNames.Children.Add(tweetAuthorRealName);
-
-                        tweetRelativePanel.Children.Add(tweetAuthorNames);
-
-                        // add open in browser button
-
-                        Button goToTweet = new Button {
-                            Content = "К твиту",
-                            Name = "goToTweet",
-                            Margin = new Thickness(0, 10, 10, 0),
-                            Background = GetColorFromHexa("#FFFFFF"),
-                            Foreground = GetColorFromHexa("#757575"),
-                            BorderBrush = GetColorFromHexa("#757575"),
-                            BorderThickness = new Thickness(1)
-                        };
-
-                        goToTweet.SetValue(RelativePanel.AlignRightWithPanelProperty, true);
-                        goToTweet.Click += new RoutedEventHandler(goToTweet_Click(block.data.status_url));
-
-                        tweetRelativePanel.Children.Add(goToTweet);
-                        // add "follow" button
-                        Button followButton = new Button();
-                        followButton.Content = "Читать";
-                        followButton.Margin = new Thickness(0,10,10,0);
-                        followButton.Background = GetColorFromHexa("#FFFFFF");
-                        followButton.Foreground = GetColorFromHexa("#4099FF");
-
-                        followButton.BorderBrush = GetColorFromHexa("#4099FF");
-                        followButton.BorderThickness = new Thickness(1,1,1,1);
-                        followButton.Click += new RoutedEventHandler(followButton_Click(block.data.user.screen_name));
-
-                        followButton.SetValue(RelativePanel.LeftOfProperty, "goToTweet");
-
-                        tweetRelativePanel.Children.Add(followButton);
-                        // set text of the tweet
-                        TextBlock tweetTextBlock = new TextBlock();
-                        tweetTextBlock.Text = block.data.text.ToString();
-                        tweetTextBlock.FontSize = TextFontSize;
-                        tweetTextBlock.Margin = new Thickness(10,0,10,5);
-                        tweetTextBlock.TextWrapping = TextWrapping.Wrap;
-                        tweetTextBlock.Name = "tweetText";
-                        tweetTextBlock.SetValue(RelativePanel.BelowProperty, "tweetAuthorAvatar");
-                        tweetTextBlock.SetValue(RelativePanel.AlignVerticalCenterWithPanelProperty, true);
-                        
-                        tweetRelativePanel.Children.Add(tweetTextBlock);
-                        // set images of the tweet
-                        var listOfImages = block.data.media;
-                        // set date of the tweet
-                        TextBlock tweetDate = new TextBlock();
-                        tweetDate.Text = block.data.created_at;
-                        tweetDate.Foreground = GetColorFromHexa("#757575");
-                        tweetDate.Margin = new Thickness(10,0,0,10);
-                        tweetDate.SetValue(RelativePanel.BelowProperty, "tweetText");
-                        tweetRelativePanel.Children.Add(tweetDate);
-
-                        // end
-                        MainView.Children.Add(tweetRelativePanel);
+                        MainView.Children.Add(twiwebview);
                         break;
                     case "rawhtml":
                         string rawhtml = block.data.raw;
