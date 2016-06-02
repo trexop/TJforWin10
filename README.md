@@ -33,6 +33,8 @@
 
 [Сборка от 2.05.2016](https://drive.google.com/open?id=0B-PT5EZmSJ-YM3NGVnQtNUh4TXM)
 
+[Сборка от 2.06.2016](https://drive.google.com/open?id=0B-PT5EZmSJ-YRlpYVGlyLWV0X00)
+
 ##Установка
 ####Сборка из исходников (для разработки и тестирования)
 
