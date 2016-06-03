@@ -1,31 +1,21 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 using TJ.GetData;
 using TJ.Models;
 using TJ.ViewModels;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
@@ -393,15 +383,22 @@ namespace TJournal.Pages
                         InlineUIContainer InlineUI = new InlineUIContainer();
                         var quote_paragraphs = Regex.Split(quote_textblock, "<p>");
 
-                        StackPanel stackpanel = new StackPanel {
+                        StackPanel stackpanel = new StackPanel
+                        {
                             Background = GetColorFromHexa("#F6F6F6"),
-                            Margin = new Thickness(0,20,0,0),
+                            Margin = new Thickness(0, 20, 0, 0),
                             MaxWidth = 650
-                        };
+                        }; 
+
+                        if (block.data.size == "big")
+                        {
+                            stackpanel.Background = GetColorFromHexa("#FFFFFF");
+                            stackpanel.Margin = new Thickness(0,50,0,0);
+                        }
 
                         foreach (var par in quote_paragraphs)
                         {
-                            if (par.Length > 1) // Легаси пиздец из старых версий, лень переделывать прост))
+                            if (par.Length > 1) 
                             {
                                 
                                 Paragraph addin = new Paragraph();
@@ -413,6 +410,13 @@ namespace TJournal.Pages
                                     TextWrapping = TextWrapping.Wrap,
                                     Margin = new Thickness(20)
                                 };
+
+                                if (block.data.size == "big")
+                                {
+                                    para.FontSize = TextFontSize * 2;
+                                    para.TextAlignment = TextAlignment.Center;
+                                    para.Margin = new Thickness(50,0,50,50);
+                                }
 
                                 stackpanel.Children.Add(para);
                             } 
@@ -600,7 +604,7 @@ namespace TJournal.Pages
         private async void Ignore_User(object sender, RoutedEventArgs e)
         {
             var dialog = new Windows.UI.Popups.MessageDialog(
-                "Вы действительно хотите игнорировать пользователя" + ArticleInfoAuthor.Text + "?", "Подтверждение");
+                "Вы действительно хотите игнорировать пользователя " + ArticleInfoAuthor.Text + "?", "Подтверждение");
             dialog.Commands.Add(new Windows.UI.Popups.UICommand("Да, он заебал уже") { Id = 1, Invoked = new UICommandInvokedHandler(this.CommandInvokedHandler) });
             dialog.Commands.Add(new Windows.UI.Popups.UICommand("Пожалуй, нет") { Id = 2, Invoked = new UICommandInvokedHandler(this.CommandInvokedHandler) });
 

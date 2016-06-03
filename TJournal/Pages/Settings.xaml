@@ -181,7 +181,7 @@
                                    Foreground="Gray" 
                                    Grid.Row="1" 
                                    VerticalAlignment="Center"
-                                   Text="Версия 0.22 [Сборка от 4.27.2016]"/>
+                                   Text="Версия 0.49 [Сборка от 02.06.2016]"/>
                     </Grid>
                     <Button Height="60" Name="Contact"
                             Margin="10,0,0,0"

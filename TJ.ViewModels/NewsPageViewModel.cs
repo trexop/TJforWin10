@@ -85,6 +85,7 @@ namespace TJ.ViewModels
         public ObservableCollection<NewsApi> TjNews { get; set; } // Объявляются массивы новостей
         public ObservableCollection<NewsApi> TjNewsRecent { get; set; }
         public ObservableCollection<NewsApi> TjNewsEditorial { get; set; }
+        public ObservableCollection<NewsApi> TjNewsWeek { get; set; }
 
         public ObservableCollection<NewsApi> TjArticles { get; set; } // Объявляются массивы статей
         public ObservableCollection<NewsApi> TjArticlesUnadmitted { get; set; }
@@ -102,6 +103,7 @@ namespace TJ.ViewModels
             TjNews = new ObservableCollection<NewsApi>(); // Создаётся массив на основе модели
             TjNewsRecent = new ObservableCollection<NewsApi>();
             TjNewsEditorial = new ObservableCollection<NewsApi>();
+            TjNewsWeek = new ObservableCollection<NewsApi>();
 
             TjArticles = new ObservableCollection<NewsApi>();
             TjArticlesUnadmitted = new ObservableCollection<NewsApi>();
@@ -131,10 +133,12 @@ namespace TJ.ViewModels
                     case "News":
                         await Facade.PopulateLatestNewsAsync(TjNews, "mainpage", 0, n, offset, "news", ""); // Засовывает в массив кучку элементов, полученных после парсинга json
                         await Facade.PopulateLatestNewsAsync(TjNewsRecent, "recent", 0, n, offset, "news", "");
+                        await Facade.PopulateLatestNewsAsync(TjNewsWeek, "week", 0, n, offset, "news", "");
                         await Facade.PopulateLatestNewsAsync(TjNewsEditorial, "editorial", 0, n, offset, "news", "");
 
                         PivotItemsWrapper.Add(new PivotItems { Header = "Главное", IsEnabled = true, Content = TjNews });
                         PivotItemsWrapper.Add(new PivotItems { Header = "Свежее", IsEnabled = false, Content = TjNewsRecent });
+                        PivotItemsWrapper.Add(new PivotItems { Header = "За неделю", IsEnabled = false, Content = TjNewsWeek });
                         PivotItemsWrapper.Add(new PivotItems { Header = "Редакция", IsEnabled = false, Content = TjNewsEditorial }); // Добавляет всё в PivotItems
                         break;
                     case "Articles":
